@@ -202,15 +202,7 @@ const Upload = ({
   return (
     <>
       <Meta title={t("upload.title")} />
-      <Group position="right" mb={20}>
-        <Button
-          loading={isUploading}
-          disabled={files.length <= 0}
-          onClick={() => showCreateUploadModalCallback(files)}
-        >
-          <FormattedMessage id="common.button.share" />
-        </Button>
-      </Group>
+
       <Dropzone
         title={
           !autoOpenCreateUploadModal && files.length > 0
@@ -220,10 +212,22 @@ const Upload = ({
         maxShareSize={maxShareSize}
         onFilesChanged={handleDropzoneFilesChanged}
         isUploading={isUploading}
+        queue_len={files.length}
       />
       {files.length > 0 && (
         <FileList<FileUpload> files={files} setFiles={setFiles} />
       )}
+
+      <Group position="center" mt={40} mb={20}>
+
+        <Button
+          loading={isUploading}
+          disabled={files.length <= 0}
+          onClick={() => showCreateUploadModalCallback(files)}
+        >
+          <FormattedMessage id="common.button.share" />
+        </Button>
+      </Group>
     </>
   );
 };

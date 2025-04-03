@@ -1,37 +1,18 @@
-import {
-  Accordion,
-  Alert,
-  Button,
-  Checkbox,
-  Col,
-  Grid,
-  Group,
-  MultiSelect,
-  NumberInput,
-  PasswordInput,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { useModals } from "@mantine/modals";
-import { ModalsContextProps } from "@mantine/modals/lib/context";
-import moment from "moment";
-import React, { useState } from "react";
-import { TbAlertCircle } from "react-icons/tb";
-import { FormattedMessage } from "react-intl";
-import * as yup from "yup";
-import useTranslate, {
-  translateOutsideContext,
-} from "../../../hooks/useTranslate.hook";
-import shareService from "../../../services/share.service";
-import { FileUpload } from "../../../types/File.type";
-import { CreateShare } from "../../../types/share.type";
-import { getExpirationPreview } from "../../../utils/date.util";
-import toast from "../../../utils/toast.util";
-import { Timespan } from "../../../types/timespan.type";
+import { Accordion, Alert, Button, Group, MultiSelect, Stack, Textarea, TextInput } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { useModals } from '@mantine/modals';
+import { ModalsContextProps } from '@mantine/modals/lib/context';
+import moment from 'moment';
+import React, { useState } from 'react';
+import { TbAlertCircle } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import * as yup from 'yup';
+import useTranslate, { translateOutsideContext } from '../../../hooks/useTranslate.hook';
+import shareService from '../../../services/share.service';
+import { FileUpload } from '../../../types/File.type';
+import { CreateShare } from '../../../types/share.type';
+import toast from '../../../utils/toast.util';
+import { Timespan } from '../../../types/timespan.type';
 
 const showCreateUploadModal = (
   modals: ModalsContextProps,
@@ -45,39 +26,26 @@ const showCreateUploadModal = (
     simplified: boolean;
   },
   files: FileUpload[],
-  uploadCallback: (createShare: CreateShare, files: FileUpload[]) => void,
+  uploadCallback: (createShare: CreateShare, files: FileUpload[]) => void
 ) => {
   const t = translateOutsideContext();
 
   if (options.simplified) {
     return modals.openModal({
-      title: t("upload.modal.title"),
-      children: (
-        <SimplifiedCreateUploadModalModal
-          options={options}
-          files={files}
-          uploadCallback={uploadCallback}
-        />
-      ),
+      title: t('upload.modal.title'),
+      children: <SimplifiedCreateUploadModalModal options={options} files={files} uploadCallback={uploadCallback} />,
     });
   }
 
   return modals.openModal({
-    title: t("upload.modal.title"),
-    children: (
-      <CreateUploadModalBody
-        options={options}
-        files={files}
-        uploadCallback={uploadCallback}
-      />
-    ),
+    title: t('upload.modal.title'),
+    children: <CreateUploadModalBody options={options} files={files} uploadCallback={uploadCallback} />,
   });
 };
 
 const generateShareId = (length: number = 16) => {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
   const randomArray = new Uint8Array(length >= 3 ? length : 3);
   crypto.getRandomValues(randomArray);
   randomArray.forEach((number) => {
@@ -86,12 +54,9 @@ const generateShareId = (length: number = 16) => {
   return result;
 };
 
-const generateAvailableLink = async (
-  shareIdLength: number,
-  times: number = 10,
-): Promise<string> => {
+const generateAvailableLink = async (shareIdLength: number, times: number = 10): Promise<string> => {
   if (times <= 0) {
-    throw new Error("Could not generate available link");
+    throw new Error('Could not generate available link');
   }
   const _link = generateShareId(shareIdLength);
   if (!(await shareService.isShareIdAvailable(_link))) {
@@ -127,22 +92,22 @@ const CreateUploadModalBody = ({
   const validationSchema = yup.object().shape({
     link: yup
       .string()
-      .required(t("common.error.field-required"))
-      .min(3, t("common.error.too-short", { length: 3 }))
-      .max(50, t("common.error.too-long", { length: 50 }))
-      .matches(new RegExp("^[a-zA-Z0-9_-]*$"), {
-        message: t("upload.modal.link.error.invalid"),
+      .required(t('common.error.field-required'))
+      .min(3, t('common.error.too-short', { length: 3 }))
+      .max(50, t('common.error.too-long', { length: 50 }))
+      .matches(new RegExp('^[a-zA-Z0-9_-]*$'), {
+        message: t('upload.modal.link.error.invalid'),
       }),
     name: yup
       .string()
       .transform((value) => value || undefined)
-      .min(3, t("common.error.too-short", { length: 3 }))
-      .max(30, t("common.error.too-long", { length: 30 })),
+      .min(3, t('common.error.too-short', { length: 3 }))
+      .max(30, t('common.error.too-long', { length: 30 })),
     password: yup
       .string()
       .transform((value) => value || undefined)
-      .min(3, t("common.error.too-short", { length: 3 }))
-      .max(30, t("common.error.too-long", { length: 30 })),
+      .min(3, t('common.error.too-short', { length: 3 }))
+      .max(30, t('common.error.too-long', { length: 30 })),
     maxViews: yup
       .number()
       .transform((value) => value || undefined)
@@ -158,7 +123,7 @@ const CreateUploadModalBody = ({
       maxViews: undefined,
       description: undefined,
       expiration_num: 1,
-      expiration_unit: "-days",
+      expiration_unit: '-days',
       never_expires: false,
     },
     validate: yupResolver(validationSchema),
@@ -166,37 +131,27 @@ const CreateUploadModalBody = ({
 
   const onSubmit = form.onSubmit(async (values) => {
     if (!(await shareService.isShareIdAvailable(values.link))) {
-      form.setFieldError("link", t("upload.modal.link.error.taken"));
+      form.setFieldError('link', t('upload.modal.link.error.taken'));
     } else {
       const expirationString = form.values.never_expires
-        ? "never"
+        ? 'never'
         : form.values.expiration_num + form.values.expiration_unit;
 
       const expirationDate = moment().add(
         form.values.expiration_num,
-        form.values.expiration_unit.replace(
-          "-",
-          "",
-        ) as moment.unitOfTime.DurationConstructor,
+        form.values.expiration_unit.replace('-', '') as moment.unitOfTime.DurationConstructor
       );
 
       if (
         options.maxExpiration.value != 0 &&
         (form.values.never_expires ||
-          expirationDate.isAfter(
-            moment().add(
-              options.maxExpiration.value,
-              options.maxExpiration.unit,
-            ),
-          ))
+          expirationDate.isAfter(moment().add(options.maxExpiration.value, options.maxExpiration.unit)))
       ) {
         form.setFieldError(
-          "expiration_num",
-          t("upload.modal.expires.error.too-long", {
-            max: moment
-              .duration(options.maxExpiration.value, options.maxExpiration.unit)
-              .humanize(),
-          }),
+          'expiration_num',
+          t('upload.modal.expires.error.too-long', {
+            max: moment.duration(options.maxExpiration.value, options.maxExpiration.unit).humanize(),
+          })
         );
         return;
       }
@@ -213,7 +168,7 @@ const CreateUploadModalBody = ({
             maxViews: values.maxViews || undefined,
           },
         },
-        files,
+        files
       );
       modals.closeAll();
     }
@@ -221,6 +176,8 @@ const CreateUploadModalBody = ({
 
   return (
     <>
+      {/*
+      // REQ_0001 hide not necessary message
       {showNotSignedInAlert && !options.isUserSignedIn && (
         <Alert
           withCloseButton
@@ -232,31 +189,30 @@ const CreateUploadModalBody = ({
           <FormattedMessage id="upload.modal.not-signed-in-description" />
         </Alert>
       )}
+      */}
+
       <form onSubmit={onSubmit}>
         <Stack align="stretch">
-          <Group align={form.errors.link ? "center" : "flex-end"}>
+          {/* REQ_0001 hide not necessary message */}
+          <Group align={form.errors.link ? 'center' : 'flex-end'} style={{ display: 'none' }}>
             <TextInput
-              style={{ flex: "1" }}
+              style={{ flex: '1' }}
               variant="filled"
-              label={t("upload.modal.link.label")}
+              label={t('upload.modal.link.label')}
               placeholder="myAwesomeShare"
-              {...form.getInputProps("link")}
+              {...form.getInputProps('link')}
             />
             <Button
-              style={{ flex: "0 0 auto" }}
+              style={{ flex: '0 0 auto' }}
               variant="outline"
-              onClick={() =>
-                form.setFieldValue(
-                  "link",
-                  generateShareId(options.shareIdLength),
-                )
-              }
+              onClick={() => form.setFieldValue('link', generateShareId(options.shareIdLength))}
             >
               <FormattedMessage id="common.button.generate" />
             </Button>
           </Group>
 
-          <Text
+          {/* REQ_0001 hide not necessary message */}
+          {/* <Text
             truncate
             italic
             size="xs"
@@ -265,7 +221,37 @@ const CreateUploadModalBody = ({
             })}
           >
             {`${window.location.origin}/s/${form.values.link}`}
-          </Text>
+          </Text> */}
+
+          <div
+            style={{
+              marginTop: '1rem',
+              marginBottom: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
+            >
+              You are going to share files,
+              <br />
+              please click "start share" to confirm 😊.
+              <br />
+              If you want to attach message, please jod it down below.
+            </div>
+          </div>
+
+          {/*
+          // REQ_0001 hide not necessary message
           {!options.isReverseShare && (
             <>
               <Grid align={form.errors.expiration_num ? "center" : "flex-end"}>
@@ -280,6 +266,7 @@ const CreateUploadModalBody = ({
                     {...form.getInputProps("expiration_num")}
                   />
                 </Col>
+
                 <Col xs={6}>
                   <Select
                     disabled={form.values.never_expires}
@@ -331,6 +318,7 @@ const CreateUploadModalBody = ({
                   />
                 </Col>
               </Grid>
+
               {options.maxExpiration.value == 0 && (
                 <Checkbox
                   label={t("upload.modal.expires.never-long")}
@@ -354,8 +342,10 @@ const CreateUploadModalBody = ({
               </Text>
             </>
           )}
+          */}
+
           <Accordion>
-            <Accordion.Item value="description" sx={{ borderBottom: "none" }}>
+            <Accordion.Item value="description" sx={{ borderBottom: 'none' }}>
               <Accordion.Control>
                 <FormattedMessage id="upload.modal.accordion.name-and-description.title" />
               </Accordion.Control>
@@ -363,30 +353,26 @@ const CreateUploadModalBody = ({
                 <Stack align="stretch">
                   <TextInput
                     variant="filled"
-                    placeholder={t(
-                      "upload.modal.accordion.name-and-description.name.placeholder",
-                    )}
-                    {...form.getInputProps("name")}
+                    placeholder={t('upload.modal.accordion.name-and-description.name.placeholder')}
+                    {...form.getInputProps('name')}
                   />
                   <Textarea
                     variant="filled"
-                    placeholder={t(
-                      "upload.modal.accordion.name-and-description.description.placeholder",
-                    )}
-                    {...form.getInputProps("description")}
+                    placeholder={t('upload.modal.accordion.name-and-description.description.placeholder')}
+                    {...form.getInputProps('description')}
                   />
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
             {options.enableEmailRecepients && (
-              <Accordion.Item value="recipients" sx={{ borderBottom: "none" }}>
+              <Accordion.Item value="recipients" sx={{ borderBottom: 'none' }}>
                 <Accordion.Control>
                   <FormattedMessage id="upload.modal.accordion.email.title" />
                 </Accordion.Control>
                 <Accordion.Panel>
                   <MultiSelect
                     data={form.values.recipients}
-                    placeholder={t("upload.modal.accordion.email.placeholder")}
+                    placeholder={t('upload.modal.accordion.email.placeholder')}
                     searchable
                     creatable
                     id="recipient-emails"
@@ -394,37 +380,26 @@ const CreateUploadModalBody = ({
                     getCreateLabel={(query) => `+ ${query}`}
                     onCreate={(query) => {
                       if (!query.match(/^\S+@\S+\.\S+$/)) {
-                        form.setFieldError(
-                          "recipients",
-                          t("upload.modal.accordion.email.invalid-email"),
-                        );
+                        form.setFieldError('recipients', t('upload.modal.accordion.email.invalid-email'));
                       } else {
-                        form.setFieldError("recipients", null);
-                        form.setFieldValue("recipients", [
-                          ...form.values.recipients,
-                          query,
-                        ]);
+                        form.setFieldError('recipients', null);
+                        form.setFieldValue('recipients', [...form.values.recipients, query]);
                         return query;
                       }
                     }}
-                    {...form.getInputProps("recipients")}
+                    {...form.getInputProps('recipients')}
                     onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                       // Add email on comma or semicolon
-                      if (e.key === "Enter" || e.key === "," || e.key === ";") {
+                      if (e.key === 'Enter' || e.key === ',' || e.key === ';') {
                         e.preventDefault();
-                        const inputValue = (
-                          e.target as HTMLInputElement
-                        ).value.trim();
+                        const inputValue = (e.target as HTMLInputElement).value.trim();
                         if (inputValue.match(/^\S+@\S+\.\S+$/)) {
-                          form.setFieldValue("recipients", [
-                            ...form.values.recipients,
-                            inputValue,
-                          ]);
-                          (e.target as HTMLInputElement).value = "";
+                          form.setFieldValue('recipients', [...form.values.recipients, inputValue]);
+                          (e.target as HTMLInputElement).value = '';
                         }
-                      } else if (e.key === " ") {
+                      } else if (e.key === ' ') {
                         e.preventDefault();
-                        (e.target as HTMLInputElement).value = "";
+                        (e.target as HTMLInputElement).value = '';
                       }
                     }}
                   />
@@ -432,6 +407,8 @@ const CreateUploadModalBody = ({
               </Accordion.Item>
             )}
 
+            {/*
+            REQ_0001 hide not necessary message
             <Accordion.Item value="security" sx={{ borderBottom: "none" }}>
               <Accordion.Control>
                 <FormattedMessage id="upload.modal.accordion.security.title" />
@@ -460,6 +437,7 @@ const CreateUploadModalBody = ({
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
+            */}
           </Accordion>
           <Button type="submit" data-autofocus>
             <FormattedMessage id="common.button.share" />
@@ -495,8 +473,8 @@ const SimplifiedCreateUploadModalModal = ({
     name: yup
       .string()
       .transform((value) => value || undefined)
-      .min(3, t("common.error.too-short", { length: 3 }))
-      .max(30, t("common.error.too-long", { length: 30 })),
+      .min(3, t('common.error.too-short', { length: 3 }))
+      .max(30, t('common.error.too-long', { length: 30 })),
   });
 
   const form = useForm({
@@ -508,12 +486,10 @@ const SimplifiedCreateUploadModalModal = ({
   });
 
   const onSubmit = form.onSubmit(async (values) => {
-    const link = await generateAvailableLink(options.shareIdLength).catch(
-      () => {
-        toast.error(t("upload.modal.link.error.taken"));
-        return undefined;
-      },
-    );
+    const link = await generateAvailableLink(options.shareIdLength).catch(() => {
+      toast.error(t('upload.modal.link.error.taken'));
+      return undefined;
+    });
 
     if (!link) {
       return;
@@ -523,7 +499,7 @@ const SimplifiedCreateUploadModalModal = ({
       {
         id: link,
         name: values.name,
-        expiration: "never",
+        expiration: 'never',
         recipients: [],
         description: values.description,
         security: {
@@ -531,7 +507,7 @@ const SimplifiedCreateUploadModalModal = ({
           maxViews: undefined,
         },
       },
-      files,
+      files
     );
     modals.closeAll();
   });
@@ -543,7 +519,7 @@ const SimplifiedCreateUploadModalModal = ({
           withCloseButton
           onClose={() => setShowNotSignedInAlert(false)}
           icon={<TbAlertCircle size={16} />}
-          title={t("upload.modal.not-signed-in")}
+          title={t('upload.modal.not-signed-in')}
           color="yellow"
         >
           <FormattedMessage id="upload.modal.not-signed-in-description" />
@@ -554,17 +530,13 @@ const SimplifiedCreateUploadModalModal = ({
           <Stack align="stretch">
             <TextInput
               variant="filled"
-              placeholder={t(
-                "upload.modal.accordion.name-and-description.name.placeholder",
-              )}
-              {...form.getInputProps("name")}
+              placeholder={t('upload.modal.accordion.name-and-description.name.placeholder')}
+              {...form.getInputProps('name')}
             />
             <Textarea
               variant="filled"
-              placeholder={t(
-                "upload.modal.accordion.name-and-description.description.placeholder",
-              )}
-              {...form.getInputProps("description")}
+              placeholder={t('upload.modal.accordion.name-and-description.description.placeholder')}
+              {...form.getInputProps('description')}
             />
           </Stack>
           <Button type="submit" data-autofocus>

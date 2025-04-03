@@ -338,7 +338,7 @@ export default {
   "upload.modal.expires.year-singular": "Year",
   "upload.modal.expires.year-plural": "Years",
 
-  "upload.modal.accordion.name-and-description.title": "Name and description",
+  "upload.modal.accordion.name-and-description.title": "Want to leave notes ?",
   "upload.modal.accordion.name-and-description.name.placeholder": "Name",
   "upload.modal.accordion.name-and-description.description.placeholder":
     "Note for the recipients of this share",
@@ -357,7 +357,7 @@ export default {
   "upload.modal.completed.never-expires": "This share will never expire.",
   "upload.modal.completed.expires-on":
     "This share will expire on {expiration}.",
-  "upload.modal.completed.share-ready": "Share ready",
+  "upload.modal.completed.share-ready": "Hey! Your Share is ready",
   "upload.modal.completed.notified-reverse-share-creator":
     "We have notified the creator of the reverse share. You can also manually share this link with them through other means.",
 
@@ -408,7 +408,7 @@ export default {
   // /imprint
   "imprint.title": "Imprint",
   // END /imprint
-  
+
   // /privacy
   "privacy.title": "Privacy Policy",
   // END /privacy
@@ -707,10 +707,11 @@ export default {
   "common.button.cancel": "Cancel",
   "common.button.confirm": "Confirm",
   "common.button.disable": "Disable",
-  "common.button.share": "Share",
+  "common.button.share": "Upload",
   "common.button.generate": "Generate",
   "common.button.done": "Done",
-  "common.text.link": "Link",
+  "common.text.link": "Link (normal share)",
+  'common.text.carousell_share_link':"Link (for carousell)",
   "common.text.navigate-to-link": "Visit link",
   "common.text.or": "or",
   "common.text.redirecting": "Redirecting...",

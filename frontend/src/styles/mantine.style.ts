@@ -1,21 +1,21 @@
-import { MantineThemeOverride } from "@mantine/core";
+import { MantineThemeOverride } from '@mantine/core';
 
 export default <MantineThemeOverride>{
   colors: {
     victoria: [
-      "#E2E1F1",
-      "#C2C0E7",
-      "#A19DE4",
-      "#7D76E8",
-      "#544AF4",
-      "#4940DE",
-      "#4239C8",
-      "#463FA8",
-      "#47428E",
-      "#464379",
+      '#eff2ff',
+      '#dfe2f2',
+      '#bdc2de',
+      '#99a0ca',
+      '#7a84b9',
+      '#6672af',
+      '#5c69ac',
+      '#4c5897',
+      '#424e88',
+      '#36437a',
     ],
   },
-  primaryColor: "victoria",
+  primaryColor: 'victoria',
   components: {
     Modal: {
       styles: (theme) => ({

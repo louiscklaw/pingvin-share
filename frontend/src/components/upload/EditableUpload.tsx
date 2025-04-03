@@ -214,12 +214,16 @@ const EditableUpload = ({
           <FormattedMessage id="common.button.save" />
         </Button>
       </Group>
+
+
       <Dropzone
         title={t("share.edit.append-upload")}
         maxShareSize={maxShareSize}
         onFilesChanged={appendFiles}
         isUploading={isUploading}
+        queue_len={1}
       />
+
       {existingAndUploadedFiles.length > 0 && (
         <FileList files={existingAndUploadedFiles} setFiles={setFiles} />
       )}

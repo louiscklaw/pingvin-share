@@ -35,9 +35,7 @@ ENV NODE_ENV=docker
 # Delete default node user
 RUN deluser --remove-home node
 
-RUN apk update --no-cache \
-    && apk upgrade --no-cache \
-    && apk add --no-cache curl caddy su-exec openssl
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache curl caddy su-exec openssl
 
 WORKDIR /opt/app/frontend
 COPY --from=frontend-builder /opt/app/public ./public
@@ -54,7 +52,7 @@ COPY --from=backend-builder /opt/app/tsconfig.json ./
 
 WORKDIR /opt/app
 
-COPY ./reverse-proxy  /opt/app/reverse-proxy
+COPY ./reverse-proxy /opt/app/reverse-proxy
 COPY ./scripts/docker ./scripts/docker
 
 EXPOSE 3000
