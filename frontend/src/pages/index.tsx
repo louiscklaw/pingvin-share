@@ -71,6 +71,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 import { modals } from '@mantine/modals';
+import { FormattedMessage } from 'react-intl';
 
 function Demo() {
   const openModal = () =>
@@ -149,9 +150,8 @@ export default function Home() {
 
             <div>louislabs file sharing</div>
 
-            <Button component={Link} href={'/upload'} radius="xl" size="md" className={classes.control}>
-              {/* <FormattedMessage id="home.button.start" /> */}
-              <div>Go Upload</div>
+            <Button component={Link} href={'/upload'} radius="xl" size="md">
+              <FormattedMessage id="Go Upload" />
             </Button>
 
             <Demo />
