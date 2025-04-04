@@ -42,7 +42,7 @@ const Body = ({ share }: { share: CompletedShare }) => {
     <>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ padding: '0.5rem', backgroundColor: '#F1EFEC', borderRadius: '0.5rem' }}>
-          <ClientQR />
+          <ClientQR link={link} />
         </div>
       </div>
 
