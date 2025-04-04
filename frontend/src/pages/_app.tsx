@@ -35,6 +35,30 @@ import Footer from "../components/footer/Footer";
 
 const excludeDefaultLayoutRoutes = ["/admin/config/[category]"];
 
+function PickFontFamily(lang_current: string) {
+  if (lang_current == 'zh-TW') return { fontFamily: "'Noto Sans TC', 'sans-serif'" };
+
+  return { fontFamily: "'Noto Sans', 'sans-serif'" };
+}
+function PickGoogleFont({ lang_current }: { lang_current: string }) {
+  if (lang_current == 'zh-TW')
+    return (
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet" />
+    );
+
+  if (lang_current == 'zh-CN')
+    return (
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" rel="stylesheet" />
+    );
+
+  if (lang_current == 'ja-JP')
+    return (
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet" />
+    );
+
+  return <></>;
+}
+
 function App({ Component, pageProps }: AppProps) {
   const systemTheme = useColorScheme(pageProps.colorScheme);
   const router = useRouter();
@@ -44,9 +68,7 @@ function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<CurrentUser | null>(pageProps.user);
   const [route, setRoute] = useState<string>(pageProps.route);
 
-  const [configVariables, setConfigVariables] = useState<Config[]>(
-    pageProps.configVariables,
-  );
+  const [configVariables, setConfigVariables] = useState<Config[]>(pageProps.configVariables);
 
   useEffect(() => {
     setRoute(router.pathname);
@@ -55,7 +77,7 @@ function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const interval = setInterval(
       async () => await authService.refreshAccessToken(),
-      2 * 60 * 1000, // 2 minutes
+      2 * 60 * 1000 // 2 minutes
     );
 
     return () => clearInterval(interval);
@@ -63,7 +85,7 @@ function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (!pageProps.language) return;
-    const cookieLanguage = getCookie("language");
+    const cookieLanguage = getCookie('language');
     if (pageProps.language != cookieLanguage) {
       i18nUtil.setLanguageCookie(pageProps.language);
       if (cookieLanguage) location.reload();
@@ -72,17 +94,15 @@ function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const colorScheme =
-      userPreferences.get("colorScheme") == "system"
-        ? systemTheme
-        : userPreferences.get("colorScheme");
+      userPreferences.get('colorScheme') == 'system' ? systemTheme : userPreferences.get('colorScheme');
 
     toggleColorScheme(colorScheme);
   }, [systemTheme]);
 
   const toggleColorScheme = (value: ColorScheme) => {
-    setColorScheme(value ?? "light");
-    setCookie("mantine-color-scheme", value ?? "light", {
-      sameSite: "lax",
+    setColorScheme(value ?? 'light');
+    setCookie('mantine-color-scheme', value ?? 'light', {
+      sameSite: 'lax',
     });
   };
 
@@ -92,69 +112,64 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
         />
+        <PickGoogleFont lang_current={language.current} />
       </Head>
+
       <IntlProvider
         messages={i18nUtil.getLocaleByCode(language.current)?.messages}
         locale={language.current}
         defaultLocale={LOCALES.ENGLISH.code}
       >
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{ colorScheme, ...globalStyle }}
-        >
-          <ColorSchemeProvider
-            colorScheme={colorScheme}
-            toggleColorScheme={toggleColorScheme}
-          >
-            <GlobalStyle />
-            <Notifications />
-            <ModalsProvider>
-              <ConfigContext.Provider
-                value={{
-                  configVariables,
-                  refresh: async () => {
-                    setConfigVariables(await configService.list());
-                  },
-                }}
-              >
-                <UserContext.Provider
+        <div style={PickFontFamily(language.current)}>
+          <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme, ...globalStyle }}>
+            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+              <GlobalStyle />
+              <Notifications />
+              <ModalsProvider>
+                <ConfigContext.Provider
                   value={{
-                    user,
-                    refreshUser: async () => {
-                      const user = await userService.getCurrentUser();
-                      setUser(user);
-                      return user;
+                    configVariables,
+                    refresh: async () => {
+                      setConfigVariables(await configService.list());
                     },
                   }}
                 >
-                  {excludeDefaultLayoutRoutes.includes(route) ? (
-                    <Component {...pageProps} />
-                  ) : (
-                    <>
-                      <Stack
-                        justify="space-between"
-                        sx={{ minHeight: "100vh" }}
-                      >
-                        <div>
-                          <Header />
-                          <Container>
-                            <Component {...pageProps} />
-                          </Container>
-                        </div>
-                        <Footer />
-                      </Stack>
-                    </>
-                  )}
-                </UserContext.Provider>
-              </ConfigContext.Provider>
-            </ModalsProvider>
-          </ColorSchemeProvider>
-        </MantineProvider>
+                  <UserContext.Provider
+                    value={{
+                      user,
+                      refreshUser: async () => {
+                        const user = await userService.getCurrentUser();
+                        setUser(user);
+                        return user;
+                      },
+                    }}
+                  >
+                    {excludeDefaultLayoutRoutes.includes(route) ? (
+                      <Component {...pageProps} />
+                    ) : (
+                      <>
+                        <Stack justify="space-between" sx={{ minHeight: '100vh' }}>
+                          <div>
+                            <Header />
+                            <Container>
+                              <Component {...pageProps} />
+                            </Container>
+                          </div>
+                          <Footer />
+                        </Stack>
+                      </>
+                    )}
+                  </UserContext.Provider>
+                </ConfigContext.Provider>
+              </ModalsProvider>
+            </ColorSchemeProvider>
+          </MantineProvider>
+        </div>
       </IntlProvider>
     </>
   );
