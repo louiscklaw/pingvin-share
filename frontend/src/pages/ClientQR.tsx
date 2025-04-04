@@ -1,9 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import QRCodeStyling, { Options } from 'qr-code-styling';
-import styles from './page.module.css';
 
-export default function ClientQR() {
+export default function ClientQR({ link }: { link: string }) {
   const [options, setOptions] = useState<Options>({
     width: 200,
     height: 200,
@@ -49,9 +48,16 @@ export default function ClientQR() {
     qrCode?.update(options);
   }, [qrCode, options]);
 
+  useEffect(() => {
+    setOptions({
+      ...options,
+      data: link,
+    });
+  }, []);
+
   return (
     <>
-      <div className={styles.qrWrapper} ref={ref} />
+      <div ref={ref} />
     </>
   );
 }

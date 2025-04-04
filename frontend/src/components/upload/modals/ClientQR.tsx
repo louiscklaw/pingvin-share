@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import QRCodeStyling, { Options } from 'qr-code-styling';
-import styles from './page.module.css';
 
 interface ClientQRProps {
   link: string; // Assuming link is a string, adjust type if needed
@@ -60,7 +59,7 @@ export default function ClientQR({ link }: ClientQRProps) {
 
   return (
     <>
-      <div className={styles.qrWrapper} ref={ref} />
+      <div ref={ref} />
     </>
   );
 }
