@@ -13,28 +13,28 @@ import CopyCarousellTextField from '../CopyCarousellTextField';
 import ClientQR from './ClientQR';
 
 
-const showCompletedUploadModal = (
-  modals: ModalsContextProps,
-  share: CompletedShare,
-) => {
+const showCompletedUploadModal = (modals: ModalsContextProps, share: CompletedShare) => {
   const t = translateOutsideContext();
+
   return modals.openModal({
     closeOnClickOutside: false,
     withCloseButton: false,
     closeOnEscape: false,
-    title: t("upload.modal.completed.share-ready"),
-    children: <Body share={share} />,
+    title: t('upload.modal.completed.share-ready'),
+    children: (
+      <>
+        <Body share={share} />
+      </>
+    ),
   });
 };
-
-
 
 const Body = ({ share }: { share: CompletedShare }) => {
   const modals = useModals();
   const router = useRouter();
   const t = useTranslate();
 
-  const isReverseShare = !!router.query["reverseShareToken"];
+  const isReverseShare = !!router.query['reverseShareToken'];
 
   const link = `${window.location.origin}/s/${share.id}`;
 
@@ -101,7 +101,7 @@ const Body = ({ share }: { share: CompletedShare }) => {
             textAlign: 'center',
           })}
         >
-          You can share the file(s) using link above, Thanks.
+          {t('upload.modal.completed.explain-link')}
         </Text>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>

@@ -1,4 +1,21 @@
-import { Accordion, Alert, Button, Group, MultiSelect, Stack, Textarea, TextInput } from '@mantine/core';
+import {
+  Accordion,
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Col,
+  Flex,
+  Grid,
+  Group,
+  MultiSelect,
+  NumberInput,
+  Select,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { useModals } from '@mantine/modals';
 import { ModalsContextProps } from '@mantine/modals/lib/context';
@@ -13,6 +30,8 @@ import { FileUpload } from '../../../types/File.type';
 import { CreateShare } from '../../../types/share.type';
 import toast from '../../../utils/toast.util';
 import { Timespan } from '../../../types/timespan.type';
+import useUser from '../../../hooks/user.hook';
+import { getExpirationPreview } from '../../../utils/date.util';
 
 const showCreateUploadModal = (
   modals: ModalsContextProps,
@@ -85,6 +104,8 @@ const CreateUploadModalBody = ({
   const modals = useModals();
   const t = useTranslate();
 
+  const { user } = useUser();
+
   const generatedLink = generateShareId(options.shareIdLength);
 
   const [showNotSignedInAlert, setShowNotSignedInAlert] = useState(true);
@@ -122,8 +143,10 @@ const CreateUploadModalBody = ({
       password: undefined,
       maxViews: undefined,
       description: undefined,
-      expiration_num: 1,
+      expiration_num: 14,
       expiration_unit: '-days',
+
+      // REQ0005, never expire
       never_expires: false,
     },
     validate: yupResolver(validationSchema),
@@ -210,7 +233,6 @@ const CreateUploadModalBody = ({
               <FormattedMessage id="common.button.generate" />
             </Button>
           </Group>
-
           {/* REQ_0001 hide not necessary message */}
           {/* <Text
             truncate
@@ -222,97 +244,71 @@ const CreateUploadModalBody = ({
           >
             {`${window.location.origin}/s/${form.values.link}`}
           </Text> */}
+          <Box>{t('upload.explain')}</Box>
 
-          <div
-            style={{
-              marginTop: '1rem',
-              marginBottom: '1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                gap: '1rem',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-              }}
-            >
-              You are going to share files,
-              <br />
-              please click "start share" to confirm 😊.
-              <br />
-              If you want to attach message, please jod it down below.
-            </div>
-          </div>
+          {/* // REQ_0001 hide not necessary message */}
 
-          {/*
-          // REQ_0001 hide not necessary message
           {!options.isReverseShare && (
             <>
-              <Grid align={form.errors.expiration_num ? "center" : "flex-end"}>
+              <Grid align={form.errors.expiration_num ? 'center' : 'flex-end'}>
                 <Col xs={6}>
                   <NumberInput
                     min={1}
                     max={99999}
                     precision={0}
                     variant="filled"
-                    label={t("upload.modal.expires.label")}
+                    label={t('upload.modal.expires.label')}
                     disabled={form.values.never_expires}
-                    {...form.getInputProps("expiration_num")}
+                    {...form.getInputProps('expiration_num')}
                   />
                 </Col>
 
                 <Col xs={6}>
                   <Select
                     disabled={form.values.never_expires}
-                    {...form.getInputProps("expiration_unit")}
+                    {...form.getInputProps('expiration_unit')}
                     data={[
                       {
-                        value: "-minutes",
+                        value: '-minutes',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.minute-singular")
-                            : t("upload.modal.expires.minute-plural"),
+                            ? t('upload.modal.expires.minute-singular')
+                            : t('upload.modal.expires.minute-plural'),
                       },
                       {
-                        value: "-hours",
+                        value: '-hours',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.hour-singular")
-                            : t("upload.modal.expires.hour-plural"),
+                            ? t('upload.modal.expires.hour-singular')
+                            : t('upload.modal.expires.hour-plural'),
                       },
                       {
-                        value: "-days",
+                        value: '-days',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.day-singular")
-                            : t("upload.modal.expires.day-plural"),
+                            ? t('upload.modal.expires.day-singular')
+                            : t('upload.modal.expires.day-plural'),
                       },
                       {
-                        value: "-weeks",
+                        value: '-weeks',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.week-singular")
-                            : t("upload.modal.expires.week-plural"),
+                            ? t('upload.modal.expires.week-singular')
+                            : t('upload.modal.expires.week-plural'),
                       },
                       {
-                        value: "-months",
+                        value: '-months',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.month-singular")
-                            : t("upload.modal.expires.month-plural"),
+                            ? t('upload.modal.expires.month-singular')
+                            : t('upload.modal.expires.month-plural'),
                       },
                       {
-                        value: "-years",
+                        value: '-years',
                         label:
                           form.values.expiration_num == 1
-                            ? t("upload.modal.expires.year-singular")
-                            : t("upload.modal.expires.year-plural"),
+                            ? t('upload.modal.expires.year-singular')
+                            : t('upload.modal.expires.year-plural'),
                       },
                     ]}
                   />
@@ -320,30 +316,25 @@ const CreateUploadModalBody = ({
               </Grid>
 
               {options.maxExpiration.value == 0 && (
-                <Checkbox
-                  label={t("upload.modal.expires.never-long")}
-                  {...form.getInputProps("never_expires")}
-                />
+                <Checkbox label={t('upload.modal.expires.never-long')} {...form.getInputProps('never_expires')} />
               )}
-              <Text
-                italic
-                size="xs"
-                sx={(theme) => ({
-                  color: theme.colors.gray[6],
-                })}
-              >
-                {getExpirationPreview(
-                  {
-                    neverExpires: t("upload.modal.completed.never-expires"),
-                    expiresOn: t("upload.modal.completed.expires-on"),
-                  },
-                  form,
-                )}
-              </Text>
+
+              <Box sx={{ marginTop: '1rem' }}>
+                <Box sx={{ marginTop: '1rem' }}> </Box>
+                <Alert icon={<TbAlertCircle size={24} />} color="yellow">
+                  <Text size="md" sx={(theme) => ({ color: theme.colors.gray[8] })}>
+                    {getExpirationPreview(
+                      {
+                        neverExpires: t('upload.modal.completed.never-expires'),
+                        expiresOn: t('upload.modal.completed.expires-on'),
+                      },
+                      form
+                    )}
+                  </Text>
+                </Alert>
+              </Box>
             </>
           )}
-          */}
-
           <Accordion>
             <Accordion.Item value="description" sx={{ borderBottom: 'none' }}>
               <Accordion.Control>

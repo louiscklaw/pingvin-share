@@ -72,8 +72,11 @@ const useStyles = createStyles((theme) => ({
 
 import { modals } from '@mantine/modals';
 import { FormattedMessage } from 'react-intl';
+import useTranslate from '../hooks/useTranslate.hook';
 
 function Demo() {
+  const t = useTranslate();
+
   const openModal = () =>
     modals.openConfirmModal({
       title: 'How to use this?',
@@ -107,7 +110,7 @@ function Demo() {
 
   return (
     <Button onClick={openModal} radius="xl" size="md">
-      How to use ?
+      {t('how-to-use')}
     </Button>
   );
 }
@@ -118,6 +121,7 @@ export default function Home() {
   const router = useRouter();
   const config = useConfig();
   const [signupEnabled, setSignupEnabled] = useState(true);
+  const t = useTranslate();
 
   // If user is already authenticated, redirect to the upload page
   useEffect(() => {
@@ -143,15 +147,16 @@ export default function Home() {
   return (
     <>
       <Meta title="Louislabs file share" />
+
       <Container>
         <div className={classes.inner}>
           <div className={classes.content}>
-            <ClientQR />
+            <ClientQR link={'https://share.louislabs.com'} />
 
-            <div>louislabs file sharing</div>
+            <div>{t('louislabs-file-sharing')}</div>
 
             <Button component={Link} href={'/upload'} radius="xl" size="md">
-              <FormattedMessage id="Go Upload" />
+              <FormattedMessage id="Go-Upload" />
             </Button>
 
             <Demo />
