@@ -15,6 +15,7 @@ export default <MantineThemeOverride>{
       '#36437a',
     ],
   },
+  fontFamily: '"Noto Sans TC","Noto Sans SC","sans-serif"',
   primaryColor: 'victoria',
   components: {
     Modal: {
