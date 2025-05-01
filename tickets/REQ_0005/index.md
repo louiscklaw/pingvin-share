@@ -1,8 +1,8 @@
 ---
-tags: UI
+tags: UI, mobile, responsive
 ---
 
-# Update favicon
+# Update UI on mobile screen
 
 ## Description
 
