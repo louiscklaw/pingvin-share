@@ -1,5 +1,5 @@
-import { NativeSelect, NumberInput } from "@mantine/core";
-import { useState } from "react";
+import { NativeSelect, NumberInput } from '@mantine/core';
+import { useState } from 'react';
 
 const multipliers = {
   B: 1,
@@ -13,14 +13,13 @@ const multipliers = {
   TiB: 1024 ** 4,
 };
 
-const units = (
-  ["B", "KB", "KiB", "MB", "MiB", "GB", "GiB", "TB", "TiB"] as const
-).map((unit) => ({ label: unit, value: unit }));
+const units = (['B', 'KB', 'KiB', 'MB', 'MiB', 'GB', 'GiB', 'TB', 'TiB'] as const).map((unit) => ({
+  label: unit,
+  value: unit,
+}));
 
 function getLargestApplicableUnit(value: number) {
-  return (
-    units.findLast((unit) => value % multipliers[unit.value] === 0) || units[0]
-  );
+  return units.findLast((unit) => value % multipliers[unit.value] === 0) || units[0];
 }
 
 const FileSizeInput = ({
@@ -51,8 +50,7 @@ const FileSizeInput = ({
         },
       }}
       onChange={(event) => {
-        const unit = event.currentTarget
-          .value as (typeof units)[number]["value"];
+        const unit = event.currentTarget.value as (typeof units)[number]['value'];
         setUnit(unit);
         onChange(multipliers[unit] * inputValue);
       }}

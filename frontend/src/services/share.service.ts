@@ -1,15 +1,9 @@
-import { deleteCookie, setCookie } from "cookies-next";
-import mime from "mime-types";
-import { FileUploadResponse } from "../types/File.type";
+import { deleteCookie, setCookie } from 'cookies-next';
+import mime from 'mime-types';
+import { FileUploadResponse } from '../types/File.type';
 
-import {
-  CreateShare,
-  MyReverseShare,
-  MyShare,
-  Share,
-  ShareMetaData,
-} from "../types/share.type";
-import api from "./api.service";
+import { CreateShare, MyReverseShare, MyShare, Share, ShareMetaData } from '../types/share.type';
+import api from './api.service';
 
 const list = async (): Promise<MyShare[]> => {
   return (await api.get(`shares/all`)).data;
@@ -17,14 +11,14 @@ const list = async (): Promise<MyShare[]> => {
 
 const create = async (share: CreateShare, isReverseShare = false) => {
   if (!isReverseShare) {
-    deleteCookie("reverse_share_token");
+    deleteCookie('reverse_share_token');
   }
-  return (await api.post("shares", share)).data;
+  return (await api.post('shares', share)).data;
 };
 
 const completeShare = async (id: string) => {
   const response = (await api.post(`shares/${id}/complete`)).data;
-  deleteCookie("reverse_share_token");
+  deleteCookie('reverse_share_token');
   return response;
 };
 
@@ -49,7 +43,7 @@ const remove = async (id: string) => {
 };
 
 const getMyShares = async (): Promise<MyShare[]> => {
-  return (await api.get("shares")).data;
+  return (await api.get('shares')).data;
 };
 
 const getShareToken = async (id: string, password?: string) => {
@@ -61,16 +55,16 @@ const isShareIdAvailable = async (id: string): Promise<boolean> => {
 };
 
 const doesFileSupportPreview = (fileName: string) => {
-  const mimeType = (mime.contentType(fileName) || "").split(";")[0];
+  const mimeType = (mime.contentType(fileName) || '').split(';')[0];
 
   if (!mimeType) return false;
 
   const supportedMimeTypes = [
-    mimeType.startsWith("video/"),
-    mimeType.startsWith("image/"),
-    mimeType.startsWith("audio/"),
-    mimeType.startsWith("text/"),
-    mimeType == "application/pdf",
+    mimeType.startsWith('video/'),
+    mimeType.startsWith('image/'),
+    mimeType.startsWith('audio/'),
+    mimeType.startsWith('text/'),
+    mimeType == 'application/pdf',
   ];
 
   return supportedMimeTypes.some((isSupported) => isSupported);
@@ -92,11 +86,11 @@ const uploadFile = async (
     name: string;
   },
   chunkIndex: number,
-  totalChunks: number,
+  totalChunks: number
 ): Promise<FileUploadResponse> => {
   return (
     await api.post(`shares/${shareId}/files`, chunk, {
-      headers: { "Content-Type": "application/octet-stream" },
+      headers: { 'Content-Type': 'application/octet-stream' },
       params: {
         id: file.id,
         name: file.name,
@@ -113,10 +107,10 @@ const createReverseShare = async (
   maxUseCount: number,
   sendEmailNotification: boolean,
   simplified: boolean,
-  publicAccess: boolean,
+  publicAccess: boolean
 ) => {
   return (
-    await api.post("reverseShares", {
+    await api.post('reverseShares', {
       shareExpiration,
       maxShareSize: maxShareSize.toString(),
       maxUseCount,
@@ -128,12 +122,12 @@ const createReverseShare = async (
 };
 
 const getMyReverseShares = async (): Promise<MyReverseShare[]> => {
-  return (await api.get("reverseShares")).data;
+  return (await api.get('reverseShares')).data;
 };
 
 const setReverseShare = async (reverseShareToken: string) => {
   const { data } = await api.get(`/reverseShares/${reverseShareToken}`);
-  setCookie("reverse_share_token", reverseShareToken);
+  setCookie('reverse_share_token', reverseShareToken);
   return data;
 };
 

@@ -1,63 +1,33 @@
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  Container,
-  MantineProvider,
-  Stack,
-} from "@mantine/core";
-import { useColorScheme } from "@mantine/hooks";
-import { ModalsProvider } from "@mantine/modals";
-import { Notifications } from "@mantine/notifications";
-import axios from "axios";
-import { getCookie, setCookie } from "cookies-next";
-import moment from "moment";
-import "moment/min/locales";
-import { GetServerSidePropsContext } from "next";
-import type { AppProps } from "next/app";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { IntlProvider } from "react-intl";
-import Header from "../components/header/Header";
-import { ConfigContext } from "../hooks/config.hook";
-import { UserContext } from "../hooks/user.hook";
-import { LOCALES } from "../i18n/locales";
-import authService from "../services/auth.service";
-import configService from "../services/config.service";
-import userService from "../services/user.service";
-import GlobalStyle from "../styles/global.style";
-import globalStyle from "../styles/mantine.style";
-import Config from "../types/config.type";
-import { CurrentUser } from "../types/user.type";
-import i18nUtil from "../utils/i18n.util";
-import userPreferences from "../utils/userPreferences.util";
-import Footer from "../components/footer/Footer";
+import { ColorScheme, ColorSchemeProvider, Container, MantineProvider, Stack } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+import axios from 'axios';
+import { getCookie, setCookie } from 'cookies-next';
+import moment from 'moment';
+import 'moment/min/locales';
+import { GetServerSidePropsContext } from 'next';
+import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { IntlProvider } from 'react-intl';
+import Header from '../components/header/Header';
+import { ConfigContext } from '../hooks/config.hook';
+import { UserContext } from '../hooks/user.hook';
+import { LOCALES } from '../i18n/locales';
+import authService from '../services/auth.service';
+import configService from '../services/config.service';
+import userService from '../services/user.service';
+import GlobalStyle from '../styles/global.style';
+import globalStyle from '../styles/mantine.style';
+import Config from '../types/config.type';
+import { CurrentUser } from '../types/user.type';
+import i18nUtil from '../utils/i18n.util';
+import userPreferences from '../utils/userPreferences.util';
+import Footer from '../components/footer/Footer';
 
-const excludeDefaultLayoutRoutes = ["/admin/config/[category]"];
-
-function PickFontFamily(lang_current: string) {
-  if (lang_current == 'zh-TW') return { fontFamily: "'Noto Sans TC', 'sans-serif'" };
-
-  return { fontFamily: "'Noto Sans', 'sans-serif'" };
-}
-function PickGoogleFont({ lang_current }: { lang_current: string }) {
-  if (lang_current == 'zh-TW')
-    return (
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet" />
-    );
-
-  if (lang_current == 'zh-CN')
-    return (
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" rel="stylesheet" />
-    );
-
-  if (lang_current == 'ja-JP')
-    return (
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet" />
-    );
-
-  return <></>;
-}
+const excludeDefaultLayoutRoutes = ['/admin/config/[category]'];
 
 function App({ Component, pageProps }: AppProps) {
   const systemTheme = useColorScheme(pageProps.colorScheme);
@@ -113,63 +83,55 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet"
-        />
-        <PickGoogleFont lang_current={language.current} />
       </Head>
-
       <IntlProvider
         messages={i18nUtil.getLocaleByCode(language.current)?.messages}
         locale={language.current}
         defaultLocale={LOCALES.ENGLISH.code}
       >
-        <div style={PickFontFamily(language.current)}>
-          <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme, ...globalStyle }}>
-            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-              <GlobalStyle />
-              <Notifications />
-              <ModalsProvider>
-                <ConfigContext.Provider
+        <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme, ...globalStyle }}>
+          <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+            <GlobalStyle />
+            <Notifications />
+            <ModalsProvider>
+              <ConfigContext.Provider
+                value={{
+                  configVariables,
+                  refresh: async () => {
+                    setConfigVariables(await configService.list());
+                  },
+                }}
+              >
+                <UserContext.Provider
                   value={{
-                    configVariables,
-                    refresh: async () => {
-                      setConfigVariables(await configService.list());
+                    user,
+                    refreshUser: async () => {
+                      const user = await userService.getCurrentUser();
+                      setUser(user);
+                      return user;
                     },
                   }}
                 >
-                  <UserContext.Provider
-                    value={{
-                      user,
-                      refreshUser: async () => {
-                        const user = await userService.getCurrentUser();
-                        setUser(user);
-                        return user;
-                      },
-                    }}
-                  >
-                    {excludeDefaultLayoutRoutes.includes(route) ? (
-                      <Component {...pageProps} />
-                    ) : (
-                      <>
-                        <Stack justify="space-between" sx={{ minHeight: '100vh' }}>
-                          <div>
-                            <Header />
-                            <Container>
-                              <Component {...pageProps} />
-                            </Container>
-                          </div>
-                          <Footer />
-                        </Stack>
-                      </>
-                    )}
-                  </UserContext.Provider>
-                </ConfigContext.Provider>
-              </ModalsProvider>
-            </ColorSchemeProvider>
-          </MantineProvider>
-        </div>
+                  {excludeDefaultLayoutRoutes.includes(route) ? (
+                    <Component {...pageProps} />
+                  ) : (
+                    <>
+                      <Stack justify="space-between" sx={{ minHeight: '100vh' }}>
+                        <div>
+                          <Header />
+                          <Container>
+                            <Component {...pageProps} />
+                          </Container>
+                        </div>
+                        <Footer />
+                      </Stack>
+                    </>
+                  )}
+                </UserContext.Provider>
+              </ConfigContext.Provider>
+            </ModalsProvider>
+          </ColorSchemeProvider>
+        </MantineProvider>
       </IntlProvider>
     </>
   );
@@ -186,12 +148,11 @@ App.getInitialProps = async ({ ctx }: { ctx: GetServerSidePropsContext }) => {
     language?: string;
   } = {
     route: ctx.resolvedUrl,
-    colorScheme:
-      (getCookie("mantine-color-scheme", ctx) as ColorScheme) ?? "light",
+    colorScheme: (getCookie('mantine-color-scheme', ctx) as ColorScheme) ?? 'light',
   };
 
   if (ctx.req) {
-    const apiURL = process.env.API_URL || "http://localhost:8080";
+    const apiURL = process.env.API_URL || 'http://localhost:8080';
     const cookieHeader = ctx.req.headers.cookie;
 
     pageProps.user = await axios(`${apiURL}/api/users/me`, {
@@ -204,11 +165,9 @@ App.getInitialProps = async ({ ctx }: { ctx: GetServerSidePropsContext }) => {
 
     pageProps.route = ctx.req.url;
 
-    const requestLanguage = i18nUtil.getLanguageFromAcceptHeader(
-      ctx.req.headers["accept-language"],
-    );
+    const requestLanguage = i18nUtil.getLanguageFromAcceptHeader(ctx.req.headers['accept-language']);
 
-    pageProps.language = ctx.req.cookies["language"] ?? requestLanguage;
+    pageProps.language = ctx.req.cookies['language'] ?? requestLanguage;
   }
   return { pageProps };
 };

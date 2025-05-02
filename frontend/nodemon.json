@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    "**/.next/**",
+    "**/test/**",
+    "**/docs/**"
+  ],
+  "watch": [
+    "src","public"
+  ],
+  "delay": 2500,
+  "ext": "ts,tsx"
+}

@@ -465,6 +465,8 @@ export default {
   "admin.config.s3.key.description": "S3 kovasına erişmenizi sağlayan anahtar.",
   "admin.config.s3.secret": "Gizli",
   "admin.config.s3.secret.description": "S3 kovasına erişmenizi sağlayan gizli anahtar.",
+  "admin.config.s3.use-checksum": "Doğrulama kullan",
+  "admin.config.s3.use-checksum.description": "Doğrulama desteklemeyen arka uçlar için kapatın (ör. B2).",
   "admin.config.category.legal": "Yasal",
   "admin.config.legal.enabled": "Yasal Bildirimleri Etkinleştir",
   "admin.config.legal.enabled.description": "Alt bilgi kısmında künyeye ve gizlilik politikasına bir bağlantı gösterilip gösterilmeyeceğini belirtir.",

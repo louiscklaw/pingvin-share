@@ -1,26 +1,18 @@
-import {
-  ActionIcon,
-  Box,
-  Group,
-  Skeleton,
-  Stack,
-  Table,
-  TextInput,
-} from "@mantine/core";
-import { useClipboard } from "@mantine/hooks";
-import { useModals } from "@mantine/modals";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { TbDownload, TbEye, TbLink } from "react-icons/tb";
-import { FormattedMessage } from "react-intl";
-import useConfig from "../../hooks/config.hook";
-import useTranslate from "../../hooks/useTranslate.hook";
-import shareService from "../../services/share.service";
-import { FileMetaData } from "../../types/File.type";
-import { Share } from "../../types/share.type";
-import { byteToHumanSizeString } from "../../utils/fileSize.util";
-import toast from "../../utils/toast.util";
-import TableSortIcon, { TableSort } from "../core/SortIcon";
-import showFilePreviewModal from "./modals/showFilePreviewModal";
+import { ActionIcon, Box, Group, Skeleton, Stack, Table, TextInput } from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
+import { useModals } from '@mantine/modals';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { TbDownload, TbEye, TbLink } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import useConfig from '../../hooks/config.hook';
+import useTranslate from '../../hooks/useTranslate.hook';
+import shareService from '../../services/share.service';
+import { FileMetaData } from '../../types/File.type';
+import { Share } from '../../types/share.type';
+import { byteToHumanSizeString } from '../../utils/fileSize.util';
+import toast from '../../utils/toast.util';
+import TableSortIcon, { TableSort } from '../core/SortIcon';
+import showFilePreviewModal from './modals/showFilePreviewModal';
 
 const FileList = ({
   files,
@@ -39,14 +31,14 @@ const FileList = ({
   const t = useTranslate();
 
   const [sort, setSort] = useState<TableSort>({
-    property: "name",
-    direction: "desc",
+    property: 'name',
+    direction: 'desc',
   });
 
   const sortFiles = () => {
     if (files && sort.property) {
       const sortedFiles = files.sort((a: any, b: any) => {
-        if (sort.direction === "asc") {
+        if (sort.direction === 'asc') {
           return b[sort.property!].localeCompare(a[sort.property!], undefined, {
             numeric: true,
           });
@@ -65,16 +57,14 @@ const FileList = ({
   };
 
   const copyFileLink = (file: FileMetaData) => {
-    const link = `${window.location.origin}/api/shares/${
-      share.id
-    }/files/${file.id}`;
+    const link = `${window.location.origin}/api/shares/${share.id}/files/${file.id}`;
 
     if (window.isSecureContext) {
       clipboard.copy(link);
-      toast.success(t("common.notify.copied-link"));
+      toast.success(t('common.notify.copied-link'));
     } else {
       modals.openModal({
-        title: t("share.modal.file-link"),
+        title: t('share.modal.file-link'),
         children: (
           <Stack align="stretch">
             <TextInput variant="filled" value={link} />
@@ -87,7 +77,7 @@ const FileList = ({
   useEffect(sortFiles, [sort]);
 
   return (
-    <Box sx={{ display: "block", overflowX: "auto" }}>
+    <Box sx={{ display: 'block', overflowX: 'auto' }}>
       <Table>
         <thead>
           <tr>
@@ -116,20 +106,12 @@ const FileList = ({
                   <td>
                     <Group position="right">
                       {shareService.doesFileSupportPreview(file.name) && (
-                        <ActionIcon
-                          onClick={() =>
-                            showFilePreviewModal(share.id, file, modals)
-                          }
-                          size={25}
-                        >
+                        <ActionIcon onClick={() => showFilePreviewModal(share.id, file, modals)} size={25}>
                           <TbEye />
                         </ActionIcon>
                       )}
                       {!share.hasPassword && (
-                        <ActionIcon
-                          size={25}
-                          onClick={() => copyFileLink(file)}
-                        >
+                        <ActionIcon size={25} onClick={() => copyFileLink(file)}>
                           <TbLink />
                         </ActionIcon>
                       )}

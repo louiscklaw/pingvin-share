@@ -11,59 +11,53 @@ import {
   Text,
   TextInput,
   Title,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { TbInfoCircle } from "react-icons/tb";
-import { FormattedMessage } from "react-intl";
-import * as yup from "yup";
-import useConfig from "../../hooks/config.hook";
-import useUser from "../../hooks/user.hook";
-import useTranslate from "../../hooks/useTranslate.hook";
-import authService from "../../services/auth.service";
-import { getOAuthIcon, getOAuthUrl } from "../../utils/oauth.util";
-import { safeRedirectPath } from "../../utils/router.util";
-import toast from "../../utils/toast.util";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { TbInfoCircle } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import * as yup from 'yup';
+import useConfig from '../../hooks/config.hook';
+import useUser from '../../hooks/user.hook';
+import useTranslate from '../../hooks/useTranslate.hook';
+import authService from '../../services/auth.service';
+import { getOAuthIcon, getOAuthUrl } from '../../utils/oauth.util';
+import { safeRedirectPath } from '../../utils/router.util';
+import toast from '../../utils/toast.util';
 
 const useStyles = createStyles((theme) => ({
   signInWith: {
     fontWeight: 500,
-    "&:before": {
+    '&:before': {
       content: "''",
       flex: 1,
-      display: "block",
+      display: 'block',
     },
-    "&:after": {
+    '&:after': {
       content: "''",
       flex: 1,
-      display: "block",
+      display: 'block',
     },
   },
   or: {
-    "&:before": {
+    '&:before': {
       content: "''",
       flex: 1,
-      display: "block",
+      display: 'block',
       borderTopWidth: 1,
-      borderTopStyle: "solid",
-      borderColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[3]
-          : theme.colors.gray[4],
+      borderTopStyle: 'solid',
+      borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
     },
-    "&:after": {
+    '&:after': {
       content: "''",
       flex: 1,
-      display: "block",
+      display: 'block',
       borderTopWidth: 1,
-      borderTopStyle: "solid",
-      borderColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[3]
-          : theme.colors.gray[4],
+      borderTopStyle: 'solid',
+      borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
     },
   },
 }));
@@ -76,18 +70,17 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
   const { classes } = useStyles();
 
   const [oauthProviders, setOauthProviders] = useState<string[] | null>(null);
-  const [isRedirectingToOauthProvider, setIsRedirectingToOauthProvider] =
-    useState(false);
+  const [isRedirectingToOauthProvider, setIsRedirectingToOauthProvider] = useState(false);
 
   const validationSchema = yup.object().shape({
-    emailOrUsername: yup.string().required(t("common.error.field-required")),
-    password: yup.string().required(t("common.error.field-required")),
+    emailOrUsername: yup.string().required(t('common.error.field-required')),
+    password: yup.string().required(t('common.error.field-required')),
   });
 
   const form = useForm({
     initialValues: {
-      emailOrUsername: "",
-      password: "",
+      emailOrUsername: '',
+      password: '',
     },
     validate: yupResolver(validationSchema),
   });
@@ -96,20 +89,16 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
     await authService
       .signIn(email.trim(), password.trim())
       .then(async (response) => {
-        if (response.data["loginToken"]) {
+        if (response.data['loginToken']) {
           // Prompt the user to enter their totp code
           showNotification({
             icon: <TbInfoCircle />,
-            color: "blue",
-            radius: "md",
-            title: t("signIn.notify.totp-required.title"),
-            message: t("signIn.notify.totp-required.description"),
+            color: 'blue',
+            radius: 'md',
+            title: t('signIn.notify.totp-required.title'),
+            message: t('signIn.notify.totp-required.description'),
           });
-          router.push(
-            `/auth/totp/${
-              response.data["loginToken"]
-            }?redirect=${encodeURIComponent(redirectPath)}`,
-          );
+          router.push(`/auth/totp/${response.data['loginToken']}?redirect=${encodeURIComponent(redirectPath)}`);
         } else {
           await refreshUser();
           router.replace(safeRedirectPath(redirectPath));
@@ -123,10 +112,7 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
       .getAvailableOAuth()
       .then((providers) => {
         setOauthProviders(providers.data);
-        if (
-          providers.data.length === 1 &&
-          config.get("oauth.disablePassword")
-        ) {
+        if (providers.data.length === 1 && config.get('oauth.disablePassword')) {
           setIsRedirectingToOauthProvider(true);
           router.push(getOAuthUrl(window.location.origin, providers.data[0]));
         }
@@ -151,33 +137,33 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
       <Title order={2} align="center" weight={900}>
         <FormattedMessage id="signin.title" />
       </Title>
-      {config.get("share.allowRegistration") && (
+      {config.get('share.allowRegistration') && (
         <Text color="dimmed" size="sm" align="center" mt={5}>
-          <FormattedMessage id="signin.description" />{" "}
-          <Anchor component={Link} href={"signUp"} size="sm">
+          <FormattedMessage id="signin.description" />{' '}
+          <Anchor component={Link} href={'signUp'} size="sm">
             <FormattedMessage id="signin.button.signup" />
           </Anchor>
         </Text>
       )}
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        {config.get("oauth.disablePassword") || (
+        {config.get('oauth.disablePassword') || (
           <form
             onSubmit={form.onSubmit((values) => {
               signIn(values.emailOrUsername, values.password);
             })}
           >
             <TextInput
-              label={t("signin.input.email-or-username")}
-              placeholder={t("signin.input.email-or-username.placeholder")}
-              {...form.getInputProps("emailOrUsername")}
+              label={t('signin.input.email-or-username')}
+              placeholder={t('signin.input.email-or-username.placeholder')}
+              {...form.getInputProps('emailOrUsername')}
             />
             <PasswordInput
-              label={t("signin.input.password")}
-              placeholder={t("signin.input.password.placeholder")}
+              label={t('signin.input.password')}
+              placeholder={t('signin.input.password.placeholder')}
               mt="md"
-              {...form.getInputProps("password")}
+              {...form.getInputProps('password')}
             />
-            {config.get("smtp.enabled") && (
+            {config.get('smtp.enabled') && (
               <Group position="right" mt="xs">
                 <Anchor component={Link} href="/auth/resetPassword" size="xs">
                   <FormattedMessage id="resetPassword.title" />
@@ -190,14 +176,14 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
           </form>
         )}
         {oauthProviders.length > 0 && (
-          <Stack mt={config.get("oauth.disablePassword") ? undefined : "xl"}>
-            {config.get("oauth.disablePassword") ? (
+          <Stack mt={config.get('oauth.disablePassword') ? undefined : 'xl'}>
+            {config.get('oauth.disablePassword') ? (
               <Group align="center" className={classes.signInWith}>
-                <Text>{t("signIn.oauth.signInWith")}</Text>
+                <Text>{t('signIn.oauth.signInWith')}</Text>
               </Group>
             ) : (
               <Group align="center" className={classes.or}>
-                <Text>{t("signIn.oauth.or")}</Text>
+                <Text>{t('signIn.oauth.or')}</Text>
               </Group>
             )}
             <Group position="center">
@@ -211,7 +197,7 @@ const SignInForm = ({ redirectPath }: { redirectPath: string }) => {
                   fullWidth
                 >
                   {getOAuthIcon(provider)}
-                  {"\u2002" + t(`signIn.oauth.${provider}`)}
+                  {'\u2002' + t(`signIn.oauth.${provider}`)}
                 </Button>
               ))}
             </Group>

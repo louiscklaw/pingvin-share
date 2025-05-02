@@ -1,12 +1,6 @@
-import {
-  SiDiscord,
-  SiGithub,
-  SiGoogle,
-  SiMicrosoft,
-  SiOpenid,
-} from "react-icons/si";
-import React from "react";
-import api from "../services/api.service";
+import { SiDiscord, SiGithub, SiGoogle, SiMicrosoft, SiOpenid } from 'react-icons/si';
+import React from 'react';
+import api from '../services/api.service';
 
 const getOAuthUrl = (appUrl: string, provider: string) => {
   return `${appUrl}/api/oauth/auth/${provider}`;

@@ -1,23 +1,15 @@
-import {
-  ActionIcon,
-  Box,
-  Group,
-  MediaQuery,
-  Skeleton,
-  Table,
-  Text,
-} from "@mantine/core";
-import { useClipboard } from "@mantine/hooks";
-import { useModals } from "@mantine/modals";
-import moment from "moment";
-import { TbLink, TbTrash } from "react-icons/tb";
-import { FormattedMessage } from "react-intl";
-import useConfig from "../../../hooks/config.hook";
-import useTranslate from "../../../hooks/useTranslate.hook";
-import { MyShare } from "../../../types/share.type";
-import { byteToHumanSizeString } from "../../../utils/fileSize.util";
-import toast from "../../../utils/toast.util";
-import showShareLinkModal from "../../account/showShareLinkModal";
+import { ActionIcon, Box, Group, MediaQuery, Skeleton, Table, Text } from '@mantine/core';
+import { useClipboard } from '@mantine/hooks';
+import { useModals } from '@mantine/modals';
+import moment from 'moment';
+import { TbLink, TbTrash } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import useConfig from '../../../hooks/config.hook';
+import useTranslate from '../../../hooks/useTranslate.hook';
+import { MyShare } from '../../../types/share.type';
+import { byteToHumanSizeString } from '../../../utils/fileSize.util';
+import toast from '../../../utils/toast.util';
+import showShareLinkModal from '../../account/showShareLinkModal';
 
 const ManageShareTable = ({
   shares,
@@ -34,7 +26,7 @@ const ManageShareTable = ({
   const t = useTranslate();
 
   return (
-    <Box sx={{ display: "block", overflowX: "auto" }}>
+    <Box sx={{ display: 'block', overflowX: 'auto' }}>
       <Table verticalSpacing="sm">
         <thead>
           <tr>
@@ -66,20 +58,10 @@ const ManageShareTable = ({
                 <tr key={share.id}>
                   <td>{share.id}</td>
                   <td>{share.name}</td>
-                  <td>
-                    {share.creator ? (
-                      share.creator.username
-                    ) : (
-                      <Text color="dimmed">Anonymous</Text>
-                    )}
-                  </td>
+                  <td>{share.creator ? share.creator.username : <Text color="dimmed">Anonymous</Text>}</td>
                   <td>{share.views}</td>
                   <td>{byteToHumanSizeString(share.size)}</td>
-                  <td>
-                    {moment(share.expiration).unix() === 0
-                      ? "Never"
-                      : moment(share.expiration).format("LLL")}
-                  </td>
+                  <td>{moment(share.expiration).unix() === 0 ? 'Never' : moment(share.expiration).format('LLL')}</td>
                   <td>
                     <Group position="right">
                       <ActionIcon
@@ -88,10 +70,8 @@ const ManageShareTable = ({
                         size={25}
                         onClick={() => {
                           if (window.isSecureContext) {
-                            clipboard.copy(
-                              `${window.location.origin}/s/${share.id}`,
-                            );
-                            toast.success(t("common.notify.copied-link"));
+                            clipboard.copy(`${window.location.origin}/s/${share.id}`);
+                            toast.success(t('common.notify.copied-link'));
                           } else {
                             showShareLinkModal(modals, share.id);
                           }
@@ -99,12 +79,7 @@ const ManageShareTable = ({
                       >
                         <TbLink />
                       </ActionIcon>
-                      <ActionIcon
-                        variant="light"
-                        color="red"
-                        size="sm"
-                        onClick={() => deleteShare(share)}
-                      >
+                      <ActionIcon variant="light" color="red" size="sm" onClick={() => deleteShare(share)}>
                         <TbTrash />
                       </ActionIcon>
                     </Group>
@@ -122,7 +97,7 @@ const skeletonRows = [...Array(10)].map((v, i) => (
     <td>
       <Skeleton key={i} height={20} />
     </td>
-    <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+    <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
       <td>
         <Skeleton key={i} height={20} />
       </td>

@@ -1,6 +1,6 @@
-import { jwtDecode } from "jwt-decode";
-import { NextRequest, NextResponse } from "next/server";
-import configService from "./services/config.service";
+import { jwtDecode } from 'jwt-decode';
+import { NextRequest, NextResponse } from 'next/server';
+import configService from './services/config.service';
 
 // This middleware redirects based on different conditions:
 // - Authentication state
@@ -8,27 +8,20 @@ import configService from "./services/config.service";
 // - Admin privileges
 
 export const config = {
-  matcher: "/((?!api|static|.*\\..*|_next).*)",
+  matcher: '/((?!api|static|.*\\..*|_next).*)',
 };
 
 export async function middleware(request: NextRequest) {
   const routes = {
-    unauthenticated: new Routes(["/auth/*", "/"]),
-    public: new Routes([
-      "/share/*",
-      "/s/*",
-      "/upload/*",
-      "/error",
-      "/imprint",
-      "/privacy",
-    ]),
-    admin: new Routes(["/admin/*"]),
-    account: new Routes(["/account*"]),
+    unauthenticated: new Routes(['/auth/*', '/']),
+    public: new Routes(['/share/*', '/s/*', '/upload/*', '/error', '/imprint', '/privacy']),
+    admin: new Routes(['/admin/*']),
+    account: new Routes(['/account*']),
     disabled: new Routes([]),
   };
 
   // Get config from backend
-  const apiUrl = process.env.API_URL || "http://localhost:8080";
+  const apiUrl = process.env.API_URL || 'http://localhost:8080';
   const config = await (await fetch(`${apiUrl}/api/configs`)).json();
 
   const getConfig = (key: string) => {
@@ -37,12 +30,10 @@ export async function middleware(request: NextRequest) {
 
   const route = request.nextUrl.pathname;
   let user: { isAdmin: boolean } | null = null;
-  const accessToken = request.cookies.get("access_token")?.value;
+  const accessToken = request.cookies.get('access_token')?.value;
 
   try {
-    const claims = jwtDecode<{ exp: number; isAdmin: boolean }>(
-      accessToken as string,
-    );
+    const claims = jwtDecode<{ exp: number; isAdmin: boolean }>(accessToken as string);
     if (claims.exp * 1000 > Date.now()) {
       user = claims;
     }
@@ -50,29 +41,26 @@ export async function middleware(request: NextRequest) {
     user = null;
   }
 
-  if (!getConfig("share.allowRegistration")) {
-    routes.disabled.routes.push("/auth/signUp");
+  if (!getConfig('share.allowRegistration')) {
+    routes.disabled.routes.push('/auth/signUp');
   }
 
-  if (getConfig("share.allowUnauthenticatedShares")) {
-    routes.public.routes = ["*"];
+  if (getConfig('share.allowUnauthenticatedShares')) {
+    routes.public.routes = ['*'];
   }
 
-  if (!getConfig("smtp.enabled")) {
-    routes.disabled.routes.push("/auth/resetPassword*");
+  if (!getConfig('smtp.enabled')) {
+    routes.disabled.routes.push('/auth/resetPassword*');
   }
 
-  if (!getConfig("legal.enabled")) {
-    routes.disabled.routes.push("/imprint", "/privacy");
+  if (!getConfig('legal.enabled')) {
+    routes.disabled.routes.push('/imprint', '/privacy');
   } else {
-    if (!getConfig("legal.imprintText") && !getConfig("legal.imprintUrl")) {
-      routes.disabled.routes.push("/imprint");
+    if (!getConfig('legal.imprintText') && !getConfig('legal.imprintUrl')) {
+      routes.disabled.routes.push('/imprint');
     }
-    if (
-      !getConfig("legal.privacyPolicyText") &&
-      !getConfig("legal.privacyPolicyUrl")
-    ) {
-      routes.disabled.routes.push("/privacy");
+    if (!getConfig('legal.privacyPolicyText') && !getConfig('legal.privacyPolicyUrl')) {
+      routes.disabled.routes.push('/privacy');
     }
   }
 
@@ -122,8 +110,8 @@ export async function middleware(request: NextRequest) {
     if (rule.condition) {
       let { path } = rule;
 
-      if (path == "/auth/signIn") {
-        path = path + "?redirect=" + encodeURIComponent(route);
+      if (path == '/auth/signIn') {
+        path = path + '?redirect=' + encodeURIComponent(route);
       }
       return NextResponse.redirect(new URL(path, request.url));
     }
@@ -137,8 +125,7 @@ class Routes {
 
   contains(_route: string) {
     for (const route of this.routes) {
-      if (new RegExp("^" + route.replace(/\*/g, ".*") + "$").test(_route))
-        return true;
+      if (new RegExp('^' + route.replace(/\*/g, '.*') + '$').test(_route)) return true;
     }
     return false;
   }

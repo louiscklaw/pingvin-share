@@ -1,11 +1,11 @@
-import { LoadingOverlay } from "@mantine/core";
-import { GetServerSidePropsContext } from "next";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import SignInForm from "../../components/auth/SignInForm";
-import Meta from "../../components/Meta";
-import useUser from "../../hooks/user.hook";
-import useTranslate from "../../hooks/useTranslate.hook";
+import { LoadingOverlay } from '@mantine/core';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import SignInForm from '../../components/auth/SignInForm';
+import Meta from '../../components/Meta';
+import useUser from '../../hooks/user.hook';
+import useTranslate from '../../hooks/useTranslate.hook';
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -25,7 +25,7 @@ const SignIn = ({ redirectPath }: { redirectPath?: string }) => {
   useEffect(() => {
     refreshUser().then((user) => {
       if (user) {
-        router.replace(redirectPath ?? "/upload");
+        router.replace(redirectPath ?? '/upload');
       } else {
         setIsLoading(false);
       }
@@ -36,8 +36,8 @@ const SignIn = ({ redirectPath }: { redirectPath?: string }) => {
 
   return (
     <>
-      <Meta title={t("signin.title")} />
-      <SignInForm redirectPath={redirectPath ?? "/upload"} />
+      <Meta title={t('signin.title')} />
+      <SignInForm redirectPath={redirectPath ?? '/upload'} />
     </>
   );
 };

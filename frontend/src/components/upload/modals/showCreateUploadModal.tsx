@@ -1,15 +1,14 @@
 import {
   Accordion,
   Alert,
-  Box,
   Button,
   Checkbox,
   Col,
-  Flex,
   Grid,
   Group,
   MultiSelect,
   NumberInput,
+  PasswordInput,
   Select,
   Stack,
   Text,
@@ -28,10 +27,9 @@ import useTranslate, { translateOutsideContext } from '../../../hooks/useTransla
 import shareService from '../../../services/share.service';
 import { FileUpload } from '../../../types/File.type';
 import { CreateShare } from '../../../types/share.type';
+import { getExpirationPreview } from '../../../utils/date.util';
 import toast from '../../../utils/toast.util';
 import { Timespan } from '../../../types/timespan.type';
-import useUser from '../../../hooks/user.hook';
-import { getExpirationPreview } from '../../../utils/date.util';
 
 const showCreateUploadModal = (
   modals: ModalsContextProps,
@@ -104,8 +102,6 @@ const CreateUploadModalBody = ({
   const modals = useModals();
   const t = useTranslate();
 
-  const { user } = useUser();
-
   const generatedLink = generateShareId(options.shareIdLength);
 
   const [showNotSignedInAlert, setShowNotSignedInAlert] = useState(true);
@@ -143,10 +139,8 @@ const CreateUploadModalBody = ({
       password: undefined,
       maxViews: undefined,
       description: undefined,
-      expiration_num: 14,
+      expiration_num: 1,
       expiration_unit: '-days',
-
-      // REQ0005, never expire
       never_expires: false,
     },
     validate: yupResolver(validationSchema),
@@ -199,25 +193,20 @@ const CreateUploadModalBody = ({
 
   return (
     <>
-      {/*
-      // REQ_0001 hide not necessary message
       {showNotSignedInAlert && !options.isUserSignedIn && (
         <Alert
           withCloseButton
           onClose={() => setShowNotSignedInAlert(false)}
           icon={<TbAlertCircle size={16} />}
-          title={t("upload.modal.not-signed-in")}
+          title={t('upload.modal.not-signed-in')}
           color="yellow"
         >
           <FormattedMessage id="upload.modal.not-signed-in-description" />
         </Alert>
       )}
-      */}
-
       <form onSubmit={onSubmit}>
         <Stack align="stretch">
-          {/* REQ_0001 hide not necessary message */}
-          <Group align={form.errors.link ? 'center' : 'flex-end'} style={{ display: 'none' }}>
+          <Group align={form.errors.link ? 'center' : 'flex-end'}>
             <TextInput
               style={{ flex: '1' }}
               variant="filled"
@@ -233,8 +222,8 @@ const CreateUploadModalBody = ({
               <FormattedMessage id="common.button.generate" />
             </Button>
           </Group>
-          {/* REQ_0001 hide not necessary message */}
-          {/* <Text
+
+          <Text
             truncate
             italic
             size="xs"
@@ -243,11 +232,7 @@ const CreateUploadModalBody = ({
             })}
           >
             {`${window.location.origin}/s/${form.values.link}`}
-          </Text> */}
-          <Box>{t('upload.explain')}</Box>
-
-          {/* // REQ_0001 hide not necessary message */}
-
+          </Text>
           {!options.isReverseShare && (
             <>
               <Grid align={form.errors.expiration_num ? 'center' : 'flex-end'}>
@@ -262,7 +247,6 @@ const CreateUploadModalBody = ({
                     {...form.getInputProps('expiration_num')}
                   />
                 </Col>
-
                 <Col xs={6}>
                   <Select
                     disabled={form.values.never_expires}
@@ -314,25 +298,24 @@ const CreateUploadModalBody = ({
                   />
                 </Col>
               </Grid>
-
               {options.maxExpiration.value == 0 && (
                 <Checkbox label={t('upload.modal.expires.never-long')} {...form.getInputProps('never_expires')} />
               )}
-
-              <Box sx={{ marginTop: '1rem' }}>
-                <Box sx={{ marginTop: '1rem' }}> </Box>
-                <Alert icon={<TbAlertCircle size={24} />} color="yellow">
-                  <Text size="md" sx={(theme) => ({ color: theme.colors.gray[8] })}>
-                    {getExpirationPreview(
-                      {
-                        neverExpires: t('upload.modal.completed.never-expires'),
-                        expiresOn: t('upload.modal.completed.expires-on'),
-                      },
-                      form
-                    )}
-                  </Text>
-                </Alert>
-              </Box>
+              <Text
+                italic
+                size="xs"
+                sx={(theme) => ({
+                  color: theme.colors.gray[6],
+                })}
+              >
+                {getExpirationPreview(
+                  {
+                    neverExpires: t('upload.modal.completed.never-expires'),
+                    expiresOn: t('upload.modal.completed.expires-on'),
+                  },
+                  form
+                )}
+              </Text>
             </>
           )}
           <Accordion>
@@ -398,9 +381,7 @@ const CreateUploadModalBody = ({
               </Accordion.Item>
             )}
 
-            {/*
-            REQ_0001 hide not necessary message
-            <Accordion.Item value="security" sx={{ borderBottom: "none" }}>
+            <Accordion.Item value="security" sx={{ borderBottom: 'none' }}>
               <Accordion.Control>
                 <FormattedMessage id="upload.modal.accordion.security.title" />
               </Accordion.Control>
@@ -408,27 +389,22 @@ const CreateUploadModalBody = ({
                 <Stack align="stretch">
                   <PasswordInput
                     variant="filled"
-                    placeholder={t(
-                      "upload.modal.accordion.security.password.placeholder",
-                    )}
-                    label={t("upload.modal.accordion.security.password.label")}
+                    placeholder={t('upload.modal.accordion.security.password.placeholder')}
+                    label={t('upload.modal.accordion.security.password.label')}
                     autoComplete="new-password"
-                    {...form.getInputProps("password")}
+                    {...form.getInputProps('password')}
                   />
                   <NumberInput
                     min={1}
                     type="number"
                     variant="filled"
-                    placeholder={t(
-                      "upload.modal.accordion.security.max-views.placeholder",
-                    )}
-                    label={t("upload.modal.accordion.security.max-views.label")}
-                    {...form.getInputProps("maxViews")}
+                    placeholder={t('upload.modal.accordion.security.max-views.placeholder')}
+                    label={t('upload.modal.accordion.security.max-views.label')}
+                    {...form.getInputProps('maxViews')}
                   />
                 </Stack>
               </Accordion.Panel>
             </Accordion.Item>
-            */}
           </Accordion>
           <Button type="submit" data-autofocus>
             <FormattedMessage id="common.button.share" />

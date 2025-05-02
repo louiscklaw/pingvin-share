@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Timespan } from "../../types/timespan.type";
-import { NativeSelect, NumberInput } from "@mantine/core";
-import useTranslate from "../../hooks/useTranslate.hook";
+import { useState } from 'react';
+import { Timespan } from '../../types/timespan.type';
+import { NativeSelect, NumberInput } from '@mantine/core';
+import useTranslate from '../../hooks/useTranslate.hook';
 
 const TimespanInput = ({
   label,
@@ -18,32 +18,32 @@ const TimespanInput = ({
   const [inputValue, setInputValue] = useState(value.value);
   const t = useTranslate();
 
-  const version = inputValue == 1 ? "singular" : "plural";
+  const version = inputValue == 1 ? 'singular' : 'plural';
   const unitSelect = (
     <NativeSelect
       data={[
         {
-          value: "minutes",
+          value: 'minutes',
           label: t(`upload.modal.expires.minute-${version}`),
         },
         {
-          value: "hours",
+          value: 'hours',
           label: t(`upload.modal.expires.hour-${version}`),
         },
         {
-          value: "days",
+          value: 'days',
           label: t(`upload.modal.expires.day-${version}`),
         },
         {
-          value: "weeks",
+          value: 'weeks',
           label: t(`upload.modal.expires.week-${version}`),
         },
         {
-          value: "months",
+          value: 'months',
           label: t(`upload.modal.expires.month-${version}`),
         },
         {
-          value: "years",
+          value: 'years',
           label: t(`upload.modal.expires.year-${version}`),
         },
       ]}
@@ -59,7 +59,7 @@ const TimespanInput = ({
         },
       }}
       onChange={(event) => {
-        const unit = event.currentTarget.value as Timespan["unit"];
+        const unit = event.currentTarget.value as Timespan['unit'];
         setUnit(unit);
         onChange({ value: inputValue, unit });
       }}

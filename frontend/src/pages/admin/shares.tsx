@@ -1,13 +1,13 @@
-import { Group, Space, Text, Title } from "@mantine/core";
-import { useModals } from "@mantine/modals";
-import { useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
-import Meta from "../../components/Meta";
-import ManageShareTable from "../../components/admin/shares/ManageShareTable";
-import useTranslate from "../../hooks/useTranslate.hook";
-import shareService from "../../services/share.service";
-import { MyShare } from "../../types/share.type";
-import toast from "../../utils/toast.util";
+import { Group, Space, Text, Title } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import Meta from '../../components/Meta';
+import ManageShareTable from '../../components/admin/shares/ManageShareTable';
+import useTranslate from '../../hooks/useTranslate.hook';
+import shareService from '../../services/share.service';
+import { MyShare } from '../../types/share.type';
+import toast from '../../utils/toast.util';
 
 const Shares = () => {
   const [shares, setShares] = useState<MyShare[]>([]);
@@ -26,7 +26,7 @@ const Shares = () => {
 
   const deleteShare = (share: MyShare) => {
     modals.openConfirmModal({
-      title: t("admin.shares.edit.delete.title", {
+      title: t('admin.shares.edit.delete.title', {
         id: share.id,
       }),
       children: (
@@ -35,10 +35,10 @@ const Shares = () => {
         </Text>
       ),
       labels: {
-        confirm: t("common.button.delete"),
-        cancel: t("common.button.cancel"),
+        confirm: t('common.button.delete'),
+        cancel: t('common.button.cancel'),
       },
-      confirmProps: { color: "red" },
+      confirmProps: { color: 'red' },
       onConfirm: async () => {
         shareService
           .remove(share.id)
@@ -54,18 +54,14 @@ const Shares = () => {
 
   return (
     <>
-      <Meta title={t("admin.shares.title")} />
+      <Meta title={t('admin.shares.title')} />
       <Group position="apart" align="baseline" mb={20}>
         <Title mb={30} order={3}>
           <FormattedMessage id="admin.shares.title" />
         </Title>
       </Group>
 
-      <ManageShareTable
-        shares={shares}
-        deleteShare={deleteShare}
-        isLoading={isLoading}
-      />
+      <ManageShareTable shares={shares} deleteShare={deleteShare} isLoading={isLoading} />
       <Space h="xl" />
     </>
   );

@@ -21,6 +21,8 @@
     "**/*.tsx",
     "functions/finishShare/src/index.js",
     "functions/createShare/src/index.js"
-, "src/styles/mantine.style.ts.bak", "src/pages/ClientQR.tsx.bak"  ],
-  "exclude": ["node_modules"]
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

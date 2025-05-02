@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext } from 'next';
 
 // Redirect to the share page
 export function getServerSideProps(context: GetServerSidePropsContext) {
@@ -8,7 +8,7 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
     props: {},
     redirect: {
       permanent: false,
-      destination: "/share/" + shareId,
+      destination: '/share/' + shareId,
     },
   };
 }

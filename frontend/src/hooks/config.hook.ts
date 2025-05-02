@@ -1,6 +1,6 @@
-import { createContext, useContext } from "react";
-import configService from "../services/config.service";
-import { ConfigHook } from "../types/config.type";
+import { createContext, useContext } from 'react';
+import configService from '../services/config.service';
+import { ConfigHook } from '../types/config.type';
 
 export const ConfigContext = createContext<ConfigHook>({
   configVariables: [],

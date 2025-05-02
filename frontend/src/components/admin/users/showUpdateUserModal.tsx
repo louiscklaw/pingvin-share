@@ -1,44 +1,22 @@
-import {
-  Accordion,
-  Button,
-  Group,
-  PasswordInput,
-  Stack,
-  Switch,
-  TextInput,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { ModalsContextProps } from "@mantine/modals/lib/context";
-import { FormattedMessage } from "react-intl";
-import * as yup from "yup";
-import useTranslate, {
-  translateOutsideContext,
-} from "../../../hooks/useTranslate.hook";
-import userService from "../../../services/user.service";
-import User from "../../../types/user.type";
-import toast from "../../../utils/toast.util";
+import { Accordion, Button, Group, PasswordInput, Stack, Switch, TextInput } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { ModalsContextProps } from '@mantine/modals/lib/context';
+import { FormattedMessage } from 'react-intl';
+import * as yup from 'yup';
+import useTranslate, { translateOutsideContext } from '../../../hooks/useTranslate.hook';
+import userService from '../../../services/user.service';
+import User from '../../../types/user.type';
+import toast from '../../../utils/toast.util';
 
-const showUpdateUserModal = (
-  modals: ModalsContextProps,
-  user: User,
-  getUsers: () => void,
-) => {
+const showUpdateUserModal = (modals: ModalsContextProps, user: User, getUsers: () => void) => {
   const t = translateOutsideContext();
   return modals.openModal({
-    title: t("admin.users.edit.update.title", { username: user.username }),
+    title: t('admin.users.edit.update.title', { username: user.username }),
     children: <Body user={user} modals={modals} getUsers={getUsers} />,
   });
 };
 
-const Body = ({
-  user,
-  modals,
-  getUsers,
-}: {
-  modals: ModalsContextProps;
-  user: User;
-  getUsers: () => void;
-}) => {
+const Body = ({ user, modals, getUsers }: { modals: ModalsContextProps; user: User; getUsers: () => void }) => {
   const t = useTranslate();
 
   const accountForm = useForm({
@@ -49,24 +27,20 @@ const Body = ({
     },
     validate: yupResolver(
       yup.object().shape({
-        email: yup.string().email(t("common.error.invalid-email")),
-        username: yup
-          .string()
-          .min(3, t("common.error.too-short", { length: 3 })),
-      }),
+        email: yup.string().email(t('common.error.invalid-email')),
+        username: yup.string().min(3, t('common.error.too-short', { length: 3 })),
+      })
     ),
   });
 
   const passwordForm = useForm({
     initialValues: {
-      password: "",
+      password: '',
     },
     validate: yupResolver(
       yup.object().shape({
-        password: yup
-          .string()
-          .min(8, t("common.error.too-short", { length: 8 })),
-      }),
+        password: yup.string().min(8, t('common.error.too-short', { length: 8 })),
+      })
     ),
   });
 
@@ -85,24 +59,18 @@ const Body = ({
         })}
       >
         <Stack>
-          <TextInput
-            label={t("admin.users.table.username")}
-            {...accountForm.getInputProps("username")}
-          />
-          <TextInput
-            label={t("admin.users.table.email")}
-            {...accountForm.getInputProps("email")}
-          />
+          <TextInput label={t('admin.users.table.username')} {...accountForm.getInputProps('username')} />
+          <TextInput label={t('admin.users.table.email')} {...accountForm.getInputProps('email')} />
           <Switch
             mt="xs"
             labelPosition="left"
-            label={t("admin.users.edit.update.admin-privileges")}
-            {...accountForm.getInputProps("isAdmin", { type: "checkbox" })}
+            label={t('admin.users.edit.update.admin-privileges')}
+            {...accountForm.getInputProps('isAdmin', { type: 'checkbox' })}
           />
         </Stack>
       </form>
       <Accordion>
-        <Accordion.Item sx={{ borderBottom: "none" }} value="changePassword">
+        <Accordion.Item sx={{ borderBottom: 'none' }} value="changePassword">
           <Accordion.Control px={0}>
             <FormattedMessage id="admin.users.edit.update.change-password.title" />
           </Accordion.Control>
@@ -113,18 +81,14 @@ const Body = ({
                   .update(user.id, {
                     password: values.password,
                   })
-                  .then(() =>
-                    toast.success(
-                      t("admin.users.edit.update.notify.password.success"),
-                    ),
-                  )
+                  .then(() => toast.success(t('admin.users.edit.update.notify.password.success')))
                   .catch(toast.axiosError);
               })}
             >
               <Stack>
                 <PasswordInput
-                  label={t("admin.users.edit.update.change-password.field")}
-                  {...passwordForm.getInputProps("password")}
+                  label={t('admin.users.edit.update.change-password.field')}
+                  {...passwordForm.getInputProps('password')}
                 />
                 <Button variant="light" type="submit">
                   <FormattedMessage id="admin.users.edit.update.change-password.button" />

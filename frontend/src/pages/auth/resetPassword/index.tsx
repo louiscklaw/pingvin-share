@@ -10,16 +10,16 @@ import {
   Text,
   TextInput,
   Title,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { TbArrowLeft } from "react-icons/tb";
-import { FormattedMessage } from "react-intl";
-import * as yup from "yup";
-import useTranslate from "../../../hooks/useTranslate.hook";
-import authService from "../../../services/auth.service";
-import toast from "../../../utils/toast.util";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { TbArrowLeft } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import * as yup from 'yup';
+import useTranslate from '../../../hooks/useTranslate.hook';
+import authService from '../../../services/auth.service';
+import toast from '../../../utils/toast.util';
 
 const useStyles = createStyles((theme) => ({
   title: {
@@ -29,15 +29,15 @@ const useStyles = createStyles((theme) => ({
   },
 
   controls: {
-    [theme.fn.smallerThan("xs")]: {
-      flexDirection: "column-reverse",
+    [theme.fn.smallerThan('xs')]: {
+      flexDirection: 'column-reverse',
     },
   },
 
   control: {
-    [theme.fn.smallerThan("xs")]: {
-      width: "100%",
-      textAlign: "center",
+    [theme.fn.smallerThan('xs')]: {
+      width: '100%',
+      textAlign: 'center',
     },
   },
 }));
@@ -49,15 +49,12 @@ const ResetPassword = () => {
 
   const form = useForm({
     initialValues: {
-      email: "",
+      email: '',
     },
     validate: yupResolver(
       yup.object().shape({
-        email: yup
-          .string()
-          .email(t("common.error.invalid-email"))
-          .required(t("common.error.field-required")),
-      }),
+        email: yup.string().email(t('common.error.invalid-email')).required(t('common.error.field-required')),
+      })
     ),
   });
 
@@ -76,25 +73,19 @@ const ResetPassword = () => {
             authService
               .requestResetPassword(values.email)
               .then(() => {
-                toast.success(t("resetPassword.notify.success"));
-                router.push("/auth/signIn");
+                toast.success(t('resetPassword.notify.success'));
+                router.push('/auth/signIn');
               })
-              .catch(toast.axiosError),
+              .catch(toast.axiosError)
           )}
         >
           <TextInput
-            label={t("signup.input.email")}
-            placeholder={t("signup.input.email.placeholder")}
-            {...form.getInputProps("email")}
+            label={t('signup.input.email')}
+            placeholder={t('signup.input.email.placeholder')}
+            {...form.getInputProps('email')}
           />
           <Group position="apart" mt="lg" className={classes.controls}>
-            <Anchor
-              component={Link}
-              color="dimmed"
-              size="sm"
-              className={classes.control}
-              href={"/auth/signIn"}
-            >
+            <Anchor component={Link} color="dimmed" size="sm" className={classes.control} href={'/auth/signIn'}>
               <Center inline>
                 <TbArrowLeft size={12} />
                 <Box ml={5}>

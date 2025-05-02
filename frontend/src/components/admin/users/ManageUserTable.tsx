@@ -1,9 +1,9 @@
-import { ActionIcon, Badge, Box, Group, Skeleton, Table } from "@mantine/core";
-import { useModals } from "@mantine/modals";
-import { TbCheck, TbEdit, TbTrash } from "react-icons/tb";
-import User from "../../../types/user.type";
-import showUpdateUserModal from "./showUpdateUserModal";
-import { FormattedMessage, useIntl } from "react-intl";
+import { ActionIcon, Badge, Box, Group, Skeleton, Table } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { TbCheck, TbEdit, TbTrash } from 'react-icons/tb';
+import User from '../../../types/user.type';
+import showUpdateUserModal from './showUpdateUserModal';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const ManageUserTable = ({
   users,
@@ -19,7 +19,7 @@ const ManageUserTable = ({
   const modals = useModals();
 
   return (
-    <Box sx={{ display: "block", overflowX: "auto" }}>
+    <Box sx={{ display: 'block', overflowX: 'auto' }}>
       <Table verticalSpacing="sm">
         <thead>
           <tr>
@@ -41,10 +41,7 @@ const ManageUserTable = ({
             : users.map((user) => (
                 <tr key={user.id}>
                   <td>
-                    {user.username}{" "}
-                    {user.isLdap ? (
-                      <Badge style={{ marginLeft: "1em" }}>LDAP</Badge>
-                    ) : null}
+                    {user.username} {user.isLdap ? <Badge style={{ marginLeft: '1em' }}>LDAP</Badge> : null}
                   </td>
                   <td>{user.email}</td>
                   <td>{user.isAdmin && <TbCheck />}</td>
@@ -55,19 +52,12 @@ const ManageUserTable = ({
                           variant="light"
                           color="primary"
                           size="sm"
-                          onClick={() =>
-                            showUpdateUserModal(modals, user, getUsers)
-                          }
+                          onClick={() => showUpdateUserModal(modals, user, getUsers)}
                         >
                           <TbEdit />
                         </ActionIcon>
                       )}
-                      <ActionIcon
-                        variant="light"
-                        color="red"
-                        size="sm"
-                        onClick={() => deleteUser(user)}
-                      >
+                      <ActionIcon variant="light" color="red" size="sm" onClick={() => deleteUser(user)}>
                         <TbTrash />
                       </ActionIcon>
                     </Group>

@@ -1,9 +1,9 @@
-import { Anchor, Title, useMantineTheme } from "@mantine/core";
-import Meta from "../../components/Meta";
-import useTranslate from "../../hooks/useTranslate.hook";
-import { FormattedMessage } from "react-intl";
-import useConfig from "../../hooks/config.hook";
-import Markdown from "markdown-to-jsx";
+import { Anchor, Title, useMantineTheme } from '@mantine/core';
+import Meta from '../../components/Meta';
+import useTranslate from '../../hooks/useTranslate.hook';
+import { FormattedMessage } from 'react-intl';
+import useConfig from '../../hooks/config.hook';
+import Markdown from 'markdown-to-jsx';
 
 const Imprint = () => {
   const t = useTranslate();
@@ -11,7 +11,7 @@ const Imprint = () => {
   const config = useConfig();
   return (
     <>
-      <Meta title={t("imprint.title")} />
+      <Meta title={t('imprint.title')} />
       <Title mb={30} order={1}>
         <FormattedMessage id="imprint.title" />
       </Title>
@@ -22,31 +22,28 @@ const Imprint = () => {
             pre: {
               props: {
                 style: {
-                  backgroundColor:
-                    colorScheme == "dark"
-                      ? "rgba(50, 50, 50, 0.5)"
-                      : "rgba(220, 220, 220, 0.5)",
-                  padding: "0.75em",
-                  whiteSpace: "pre-wrap",
+                  backgroundColor: colorScheme == 'dark' ? 'rgba(50, 50, 50, 0.5)' : 'rgba(220, 220, 220, 0.5)',
+                  padding: '0.75em',
+                  whiteSpace: 'pre-wrap',
                 },
               },
             },
             table: {
               props: {
-                className: "md",
+                className: 'md',
               },
             },
             a: {
               props: {
-                target: "_blank",
-                rel: "noreferrer",
+                target: '_blank',
+                rel: 'noreferrer',
               },
               component: Anchor,
             },
           },
         }}
       >
-        {config.get("legal.imprintText")}
+        {config.get('legal.imprintText')}
       </Markdown>
     </>
   );

@@ -1,7 +1,7 @@
-import { Button, Container, createStyles, Group, Title } from "@mantine/core";
-import Link from "next/link";
-import { FormattedMessage } from "react-intl";
-import Meta from "../components/Meta";
+import { Button, Container, createStyles, Group, Title } from '@mantine/core';
+import Link from 'next/link';
+import { FormattedMessage } from 'react-intl';
+import Meta from '../components/Meta';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -10,14 +10,14 @@ const useStyles = createStyles((theme) => ({
   },
 
   label: {
-    textAlign: "center",
+    textAlign: 'center',
     fontWeight: 900,
     fontSize: 220,
     lineHeight: 1,
     marginBottom: 20,
     color: theme.colors.gray[2],
 
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan('sm')]: {
       fontSize: 120,
     },
   },

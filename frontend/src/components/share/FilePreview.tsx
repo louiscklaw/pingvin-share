@@ -1,17 +1,10 @@
-import {
-  Button,
-  Center,
-  Stack,
-  Text,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
-import { modals } from "@mantine/modals";
-import Link from "next/link";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
-import api from "../../services/api.service";
-import Markdown from "markdown-to-jsx";
+import { Button, Center, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import Link from 'next/link';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import api from '../../services/api.service';
+import Markdown from 'markdown-to-jsx';
 
 const FilePreviewContext = React.createContext<{
   shareId: string;
@@ -19,29 +12,19 @@ const FilePreviewContext = React.createContext<{
   mimeType: string;
   setIsNotSupported: Dispatch<SetStateAction<boolean>>;
 }>({
-  shareId: "",
-  fileId: "",
-  mimeType: "",
+  shareId: '',
+  fileId: '',
+  mimeType: '',
   setIsNotSupported: () => {},
 });
 
-const FilePreview = ({
-  shareId,
-  fileId,
-  mimeType,
-}: {
-  shareId: string;
-  fileId: string;
-  mimeType: string;
-}) => {
+const FilePreview = ({ shareId, fileId, mimeType }: { shareId: string; fileId: string; mimeType: string }) => {
   const [isNotSupported, setIsNotSupported] = useState(false);
   if (isNotSupported) return <UnSupportedFile />;
 
   return (
     <Stack>
-      <FilePreviewContext.Provider
-        value={{ shareId, fileId, mimeType, setIsNotSupported }}
-      >
+      <FilePreviewContext.Provider value={{ shareId, fileId, mimeType, setIsNotSupported }}>
         <FileDecider />
       </FilePreviewContext.Provider>
       <Button
@@ -61,15 +44,15 @@ const FilePreview = ({
 const FileDecider = () => {
   const { mimeType, setIsNotSupported } = React.useContext(FilePreviewContext);
 
-  if (mimeType == "application/pdf") {
+  if (mimeType == 'application/pdf') {
     return <PdfPreview />;
-  } else if (mimeType.startsWith("video/")) {
+  } else if (mimeType.startsWith('video/')) {
     return <VideoPreview />;
-  } else if (mimeType.startsWith("image/")) {
+  } else if (mimeType.startsWith('image/')) {
     return <ImagePreview />;
-  } else if (mimeType.startsWith("audio/")) {
+  } else if (mimeType.startsWith('audio/')) {
     return <AudioPreview />;
-  } else if (mimeType.startsWith("text/")) {
+  } else if (mimeType.startsWith('text/')) {
     return <TextPreview />;
   } else {
     setIsNotSupported(true);
@@ -78,12 +61,11 @@ const FileDecider = () => {
 };
 
 const AudioPreview = () => {
-  const { shareId, fileId, setIsNotSupported } =
-    React.useContext(FilePreviewContext);
+  const { shareId, fileId, setIsNotSupported } = React.useContext(FilePreviewContext);
   return (
     <Center style={{ minHeight: 200 }}>
-      <Stack align="center" spacing={10} style={{ width: "100%" }}>
-        <audio controls style={{ width: "100%" }}>
+      <Stack align="center" spacing={10} style={{ width: '100%' }}>
+        <audio controls style={{ width: '100%' }}>
           <source
             src={`/api/shares/${shareId}/files/${fileId}?download=false`}
             onError={() => setIsNotSupported(true)}
@@ -95,21 +77,16 @@ const AudioPreview = () => {
 };
 
 const VideoPreview = () => {
-  const { shareId, fileId, setIsNotSupported } =
-    React.useContext(FilePreviewContext);
+  const { shareId, fileId, setIsNotSupported } = React.useContext(FilePreviewContext);
   return (
     <video width="100%" controls>
-      <source
-        src={`/api/shares/${shareId}/files/${fileId}?download=false`}
-        onError={() => setIsNotSupported(true)}
-      />
+      <source src={`/api/shares/${shareId}/files/${fileId}?download=false`} onError={() => setIsNotSupported(true)} />
     </video>
   );
 };
 
 const ImagePreview = () => {
-  const { shareId, fileId, setIsNotSupported } =
-    React.useContext(FilePreviewContext);
+  const { shareId, fileId, setIsNotSupported } = React.useContext(FilePreviewContext);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -123,7 +100,7 @@ const ImagePreview = () => {
 
 const TextPreview = () => {
   const { shareId, fileId } = React.useContext(FilePreviewContext);
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>('');
   const { colorScheme } = useMantineTheme();
 
   useEffect(() => {
@@ -137,18 +114,15 @@ const TextPreview = () => {
       pre: {
         props: {
           style: {
-            backgroundColor:
-              colorScheme == "dark"
-                ? "rgba(50, 50, 50, 0.5)"
-                : "rgba(220, 220, 220, 0.5)",
-            padding: "0.75em",
-            whiteSpace: "pre-wrap",
+            backgroundColor: colorScheme == 'dark' ? 'rgba(50, 50, 50, 0.5)' : 'rgba(220, 220, 220, 0.5)',
+            padding: '0.75em',
+            whiteSpace: 'pre-wrap',
           },
         },
       },
       table: {
         props: {
-          className: "md",
+          className: 'md',
         },
       },
     },
@@ -159,7 +133,7 @@ const TextPreview = () => {
 
 const PdfPreview = () => {
   const { shareId, fileId } = React.useContext(FilePreviewContext);
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     window.location.href = `/api/shares/${shareId}/files/${fileId}?download=false`;
   }
   return null;

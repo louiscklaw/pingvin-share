@@ -9,17 +9,17 @@ import {
   Stack,
   Text,
   Transition,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
-import useConfig from "../../hooks/config.hook";
-import useUser from "../../hooks/user.hook";
-import useTranslate from "../../hooks/useTranslate.hook";
-import Logo from "../Logo";
-import ActionAvatar from "./ActionAvatar";
-import NavbarShareMenu from "./NavbarShareMenu";
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ReactNode, useEffect, useState } from 'react';
+import useConfig from '../../hooks/config.hook';
+import useUser from '../../hooks/user.hook';
+import useTranslate from '../../hooks/useTranslate.hook';
+import Logo from '../Logo';
+import ActionAvatar from './ActionAvatar';
+import NavbarShareMenu from './NavbarShareMenu';
 
 const HEADER_HEIGHT = 60;
 
@@ -31,7 +31,10 @@ type NavLink = {
 };
 
 const useStyles = createStyles((theme) => ({
-  root: { position: 'relative', zIndex: 1, border: 'none' },
+  root: {
+    position: 'relative',
+    zIndex: 1,
+  },
 
   dropdown: {
     position: 'absolute',
@@ -114,9 +117,16 @@ const Header = () => {
   }, [router.pathname]);
 
   const authenticatedLinks: NavLink[] = [
-    { link: '/upload', label: t('navbar.upload') },
-    { component: <NavbarShareMenu /> },
-    { component: <ActionAvatar /> },
+    {
+      link: '/upload',
+      label: t('navbar.upload'),
+    },
+    {
+      component: <NavbarShareMenu />,
+    },
+    {
+      component: <ActionAvatar />,
+    },
   ];
 
   let unauthenticatedLinks: NavLink[] = [
@@ -126,13 +136,12 @@ const Header = () => {
     },
   ];
 
-  // hide upload from original source code
-  // if (config.get("share.allowUnauthenticatedShares")) {
-  //   unauthenticatedLinks.unshift({
-  //     link: "/upload",
-  //     label: t("navbar.upload"),
-  //   });
-  // }
+  if (config.get('share.allowUnauthenticatedShares')) {
+    unauthenticatedLinks.unshift({
+      link: '/upload',
+      label: t('navbar.upload'),
+    });
+  }
 
   if (config.get('general.showHomePage'))
     unauthenticatedLinks.unshift({
@@ -157,7 +166,6 @@ const Header = () => {
             </Box>
           );
         }
-
         return (
           <Link
             key={link.label}
@@ -173,7 +181,6 @@ const Header = () => {
       })}
     </>
   );
-
   return (
     <MantineHeader height={HEADER_HEIGHT} mb={40} className={classes.root}>
       <Container className={classes.header}>

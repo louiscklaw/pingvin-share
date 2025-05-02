@@ -1,12 +1,13 @@
 {
   "name": "pingvin-share-frontend",
-  "version": "1.10.4",
+  "version": "1.11.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --end-of-line=auto --write \"src/**/*.ts*\""
+    "format": "prettier --end-of-line=auto --write \"src/**/*.ts*\"",
+    "build:w": "npx nodemon --exec \"npm i -D && npm run build && npm run start\""
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

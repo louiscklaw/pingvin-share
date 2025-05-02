@@ -1,34 +1,25 @@
-import { Button, Container, createStyles, Text } from '@mantine/core';
+import { Button, Container, createStyles, Group, List, Text, ThemeIcon, Title } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { TbCheck } from 'react-icons/tb';
+import { FormattedMessage } from 'react-intl';
+import Logo from '../components/Logo';
 import Meta from '../components/Meta';
 import useUser from '../hooks/user.hook';
 import useConfig from '../hooks/config.hook';
-// import { QRCodeSVG } from 'qrcode.react';
-// import QRCodeStyling from 'qr-code-styling';
-import ClientQR from './ClientQR';
 
 const useStyles = createStyles((theme) => ({
   inner: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingTop: `calc(${theme.spacing.md} * 4)`,
     paddingBottom: `calc(${theme.spacing.md} * 4)`,
   },
 
   content: {
-    // maxWidth: 480,
-    maxWidth: '500px',
-
-    // marginRight: `calc(${theme.spacing.md} * 3)`,
-    marginRight: 0,
-
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-    gap: '2rem',
+    maxWidth: 480,
+    marginRight: `calc(${theme.spacing.md} * 3)`,
 
     [theme.fn.smallerThan('md')]: {
       maxWidth: '100%',
@@ -70,58 +61,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-import { modals } from '@mantine/modals';
-import { FormattedMessage } from 'react-intl';
-import useTranslate from '../hooks/useTranslate.hook';
-
-function Demo() {
-  const t = useTranslate();
-
-  const openModal = () =>
-    modals.openConfirmModal({
-      title: 'How to use this?',
-      children: (
-        <>
-          <Text size="sm">This is a easy file sharing between you and louis.</Text>
-
-          <Text size="sm">
-            Just click "Go Upload", You will be redirect to the upload page. Select the file(s) you want to share, and
-            then tap "Upload"
-          </Text>
-
-          <Text size="sm">
-            A dialogue prompted for confirmation, Tap "Upload" if you sure and anywhere else to cancel. In case you want
-            to leave notes along with your upload. Tap "Want to leave notes?" and fill it in.
-          </Text>
-
-          <Text size="sm">
-            After upload complete, A dialogue with shareable link shown. If you want to share me the link through
-            carousell chat, you can copy the link "(for carousell)" and paste it in the chat. Copy the link (normal
-            share) for any other chat program. Click "Done" when you complete : )
-          </Text>
-
-          <Text size="sm">Thank you</Text>
-        </>
-      ),
-      labels: { confirm: 'Confirm', cancel: 'Cancel' },
-      onCancel: () => console.log('Cancel'),
-      onConfirm: () => console.log('Confirmed'),
-    });
-
-  return (
-    <Button onClick={openModal} radius="xl" size="md">
-      {t('how-to-use')}
-    </Button>
-  );
-}
-
 export default function Home() {
   const { classes } = useStyles();
   const { refreshUser } = useUser();
   const router = useRouter();
   const config = useConfig();
   const [signupEnabled, setSignupEnabled] = useState(true);
-  const t = useTranslate();
 
   // If user is already authenticated, redirect to the upload page
   useEffect(() => {
@@ -146,21 +91,78 @@ export default function Home() {
 
   return (
     <>
-      <Meta title="Louislabs file share" />
-
+      <Meta title="Home" />
       <Container>
         <div className={classes.inner}>
           <div className={classes.content}>
-            <ClientQR link={'https://share.louislabs.com'} />
+            <Title className={classes.title}>
+              <FormattedMessage
+                id="home.title"
+                values={{
+                  h: (chunks) => <span className={classes.highlight}>{chunks}</span>,
+                }}
+              />
+            </Title>
+            <Text color="dimmed" mt="md">
+              <FormattedMessage id="home.description" />
+            </Text>
 
-            <div>{t('louislabs-file-sharing')}</div>
+            <List
+              mt={30}
+              spacing="sm"
+              size="sm"
+              icon={
+                <ThemeIcon size={20} radius="xl">
+                  <TbCheck size={12} />
+                </ThemeIcon>
+              }
+            >
+              <List.Item>
+                <div>
+                  <b>
+                    <FormattedMessage id="home.bullet.a.name" />
+                  </b>{' '}
+                  - <FormattedMessage id="home.bullet.a.description" />
+                </div>
+              </List.Item>
+              <List.Item>
+                <div>
+                  <b>
+                    <FormattedMessage id="home.bullet.b.name" />
+                  </b>{' '}
+                  - <FormattedMessage id="home.bullet.b.description" />
+                </div>
+              </List.Item>
+              <List.Item>
+                <div>
+                  <b>
+                    <FormattedMessage id="home.bullet.c.name" />
+                  </b>{' '}
+                  - <FormattedMessage id="home.bullet.c.description" />
+                </div>
+              </List.Item>
+            </List>
 
-            <Button component={Link} href={'/upload'} radius="xl" size="md">
-              <FormattedMessage id="Go-Upload" />
-            </Button>
-
-            <Demo />
+            <Group mt={30}>
+              <Button component={Link} href={getButtonHref()} radius="xl" size="md" className={classes.control}>
+                <FormattedMessage id="home.button.start" />
+              </Button>
+              <Button
+                component={Link}
+                href="https://github.com/stonith404/pingvin-share"
+                target="_blank"
+                variant="default"
+                radius="xl"
+                size="md"
+                className={classes.control}
+              >
+                <FormattedMessage id="home.button.source" />
+              </Button>
+            </Group>
           </div>
+          <Group className={classes.image} align="center">
+            <Logo width={200} height={200} />
+          </Group>
         </div>
       </Container>
     </>

@@ -1,16 +1,16 @@
-import { Box, Group, Text, Title } from "@mantine/core";
-import { useModals } from "@mantine/modals";
-import { GetServerSidePropsContext } from "next";
-import { useEffect, useState } from "react";
-import Meta from "../../../components/Meta";
-import DownloadAllButton from "../../../components/share/DownloadAllButton";
-import FileList from "../../../components/share/FileList";
-import showEnterPasswordModal from "../../../components/share/showEnterPasswordModal";
-import showErrorModal from "../../../components/share/showErrorModal";
-import useTranslate from "../../../hooks/useTranslate.hook";
-import shareService from "../../../services/share.service";
-import { Share as ShareType } from "../../../types/share.type";
-import toast from "../../../utils/toast.util";
+import { Box, Group, Text, Title } from '@mantine/core';
+import { useModals } from '@mantine/modals';
+import { GetServerSidePropsContext } from 'next';
+import { useEffect, useState } from 'react';
+import Meta from '../../../components/Meta';
+import DownloadAllButton from '../../../components/share/DownloadAllButton';
+import FileList from '../../../components/share/FileList';
+import showEnterPasswordModal from '../../../components/share/showEnterPasswordModal';
+import showErrorModal from '../../../components/share/showErrorModal';
+import useTranslate from '../../../hooks/useTranslate.hook';
+import shareService from '../../../services/share.service';
+import { Share as ShareType } from '../../../types/share.type';
+import toast from '../../../utils/toast.util';
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -32,14 +32,14 @@ const Share = ({ shareId }: { shareId: string }) => {
       })
       .catch((e) => {
         const { error } = e.response.data;
-        if (error == "share_max_views_exceeded") {
+        if (error == 'share_max_views_exceeded') {
           showErrorModal(
             modals,
-            t("share.error.visitor-limit-exceeded.title"),
-            t("share.error.visitor-limit-exceeded.description"),
-            "go-home",
+            t('share.error.visitor-limit-exceeded.title'),
+            t('share.error.visitor-limit-exceeded.description'),
+            'go-home'
           );
-        } else if (error == "share_password_required") {
+        } else if (error == 'share_password_required') {
           showEnterPasswordModal(modals, getShareToken);
         } else {
           toast.axiosError(e);
@@ -56,38 +56,19 @@ const Share = ({ shareId }: { shareId: string }) => {
       .catch((e) => {
         const { error } = e.response.data;
         if (e.response.status == 404) {
-          if (error == "share_removed") {
-            showErrorModal(
-              modals,
-              t("share.error.removed.title"),
-              e.response.data.message,
-              "go-home",
-            );
+          if (error == 'share_removed') {
+            showErrorModal(modals, t('share.error.removed.title'), e.response.data.message, 'go-home');
           } else {
-            showErrorModal(
-              modals,
-              t("share.error.not-found.title"),
-              t("share.error.not-found.description"),
-              "go-home",
-            );
+            showErrorModal(modals, t('share.error.not-found.title'), t('share.error.not-found.description'), 'go-home');
           }
-        } else if (e.response.status == 403 && error == "private_share") {
-          showErrorModal(
-            modals,
-            t("share.error.access-denied.title"),
-            t("share.error.access-denied.description"),
-          );
-        } else if (error == "share_password_required") {
+        } else if (e.response.status == 403 && error == 'private_share') {
+          showErrorModal(modals, t('share.error.access-denied.title'), t('share.error.access-denied.description'));
+        } else if (error == 'share_password_required') {
           showEnterPasswordModal(modals, getShareToken);
-        } else if (error == "share_token_required") {
+        } else if (error == 'share_token_required') {
           getShareToken();
         } else {
-          showErrorModal(
-            modals,
-            t("common.error"),
-            t("common.error.unknown"),
-            "go-home",
-          );
+          showErrorModal(modals, t('common.error'), t('common.error.unknown'), 'go-home');
         }
       });
   };
@@ -98,25 +79,17 @@ const Share = ({ shareId }: { shareId: string }) => {
 
   return (
     <>
-      <Meta
-        title={t("share.title", { shareId: share?.name || shareId })}
-        description={t("share.description")}
-      />
+      <Meta title={t('share.title', { shareId: share?.name || shareId })} description={t('share.description')} />
 
       <Group position="apart" mb="lg">
-        <Box style={{ maxWidth: "70%" }}>
+        <Box style={{ maxWidth: '70%' }}>
           <Title order={3}>{share?.name || share?.id}</Title>
           <Text size="sm">{share?.description}</Text>
         </Box>
         {share?.files.length > 1 && <DownloadAllButton shareId={shareId} />}
       </Group>
 
-      <FileList
-        files={share?.files}
-        setShare={setShare}
-        share={share!}
-        isLoading={!share}
-      />
+      <FileList files={share?.files} setShare={setShare} share={share!} isLoading={!share} />
     </>
   );
 };

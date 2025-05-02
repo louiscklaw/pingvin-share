@@ -1,21 +1,14 @@
-import {
-  Button,
-  Container,
-  Group,
-  Paper,
-  PinInput,
-  Title,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { FormattedMessage } from "react-intl";
-import * as yup from "yup";
-import useTranslate from "../../hooks/useTranslate.hook";
-import useUser from "../../hooks/user.hook";
-import authService from "../../services/auth.service";
-import { safeRedirectPath } from "../../utils/router.util";
-import toast from "../../utils/toast.util";
+import { Button, Container, Group, Paper, PinInput, Title } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import * as yup from 'yup';
+import useTranslate from '../../hooks/useTranslate.hook';
+import useUser from '../../hooks/user.hook';
+import authService from '../../services/auth.service';
+import { safeRedirectPath } from '../../utils/router.util';
+import toast from '../../utils/toast.util';
 
 function TotpForm({ redirectPath }: { redirectPath: string }) {
   const t = useTranslate();
@@ -27,13 +20,13 @@ function TotpForm({ redirectPath }: { redirectPath: string }) {
   const validationSchema = yup.object().shape({
     code: yup
       .string()
-      .min(6, t("common.error.too-short", { length: 6 }))
-      .required(t("common.error.field-required")),
+      .min(6, t('common.error.too-short', { length: 6 }))
+      .required(t('common.error.field-required')),
   });
 
   const form = useForm({
     initialValues: {
-      code: "",
+      code: '',
     },
     validate: yupResolver(validationSchema),
   });
@@ -42,15 +35,12 @@ function TotpForm({ redirectPath }: { redirectPath: string }) {
     if (loading) return;
     setLoading(true);
     try {
-      await authService.signInTotp(
-        form.values.code,
-        router.query.loginToken as string,
-      );
+      await authService.signInTotp(form.values.code, router.query.loginToken as string);
       await refreshUser();
       await router.replace(safeRedirectPath(redirectPath));
     } catch (e) {
       toast.axiosError(e);
-      form.setFieldError("code", "error");
+      form.setFieldError('code', 'error');
     } finally {
       setLoading(false);
     }
@@ -70,10 +60,10 @@ function TotpForm({ redirectPath }: { redirectPath: string }) {
               aria-label="One time code"
               autoFocus={true}
               onComplete={onSubmit}
-              {...form.getInputProps("code")}
+              {...form.getInputProps('code')}
             />
             <Button mt="md" type="submit" loading={loading}>
-              {t("totp.button.signIn")}
+              {t('totp.button.signIn')}
             </Button>
           </Group>
         </form>
