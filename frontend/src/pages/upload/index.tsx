@@ -1,24 +1,24 @@
-import { Button, Group } from '@mantine/core';
-import { useModals } from '@mantine/modals';
-import { cleanNotifications } from '@mantine/notifications';
-import { AxiosError } from 'axios';
-import pLimit from 'p-limit';
-import { useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
-import Meta from '../../components/Meta';
-import Dropzone from '../../components/upload/Dropzone';
-import FileList from '../../components/upload/FileList';
-import showCompletedUploadModal from '../../components/upload/modals/showCompletedUploadModal';
-import showCreateUploadModal from '../../components/upload/modals/showCreateUploadModal';
-import useConfig from '../../hooks/config.hook';
-import useConfirmLeave from '../../hooks/confirm-leave.hook';
-import useTranslate from '../../hooks/useTranslate.hook';
-import useUser from '../../hooks/user.hook';
-import shareService from '../../services/share.service';
-import { FileUpload } from '../../types/File.type';
-import { CreateShare, Share } from '../../types/share.type';
-import toast from '../../utils/toast.util';
-import { useRouter } from 'next/router';
+import { Button, Group } from "@mantine/core";
+import { useModals } from "@mantine/modals";
+import { cleanNotifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
+import pLimit from "p-limit";
+import { useEffect, useRef, useState } from "react";
+import { FormattedMessage } from "react-intl";
+import Meta from "../../components/Meta";
+import Dropzone from "../../components/upload/Dropzone";
+import FileList from "../../components/upload/FileList";
+import showCompletedUploadModal from "../../components/upload/modals/showCompletedUploadModal";
+import showCreateUploadModal from "../../components/upload/modals/showCreateUploadModal";
+import useConfig from "../../hooks/config.hook";
+import useConfirmLeave from "../../hooks/confirm-leave.hook";
+import useTranslate from "../../hooks/useTranslate.hook";
+import useUser from "../../hooks/user.hook";
+import shareService from "../../services/share.service";
+import { FileUpload } from "../../types/File.type";
+import { CreateShare, Share } from "../../types/share.type";
+import toast from "../../utils/toast.util";
+import { useRouter } from "next/router";
 
 const promiseLimit = pLimit(3);
 let errorToastShown = false;
@@ -43,20 +43,20 @@ const Upload = ({
   const [isUploading, setisUploading] = useState(false);
 
   useConfirmLeave({
-    message: t('upload.notify.confirm-leave'),
+    message: t("upload.notify.confirm-leave"),
     enabled: isUploading,
   });
 
-  const chunkSize = useRef(parseInt(config.get('share.chunkSize')));
+  const chunkSize = useRef(parseInt(config.get("share.chunkSize")));
 
-  maxShareSize ??= parseInt(config.get('share.maxSize'));
-  const autoOpenCreateUploadModal = config.get('share.autoOpenShareModal');
+  maxShareSize ??= parseInt(config.get("share.maxSize"));
+  const autoOpenCreateUploadModal = config.get("share.autoOpenShareModal");
 
   const uploadFiles = async (share: CreateShare, files: FileUpload[]) => {
     setisUploading(true);
 
     try {
-      const isReverseShare = router.pathname != '/upload';
+      const isReverseShare = router.pathname != "/upload";
       createdShare = await shareService.create(share, isReverseShare);
     } catch (e) {
       toast.axiosError(e);
@@ -76,7 +76,7 @@ const Upload = ({
                 file.uploadingProgress = progress;
               }
               return file;
-            })
+            }),
           );
         };
 
@@ -101,7 +101,7 @@ const Upload = ({
                   name: file.name,
                 },
                 chunkIndex,
-                chunks
+                chunks,
               )
               .then((response) => {
                 fileId = response.id;
@@ -109,7 +109,10 @@ const Upload = ({
 
             setFileProgress(((chunkIndex + 1) / chunks) * 100);
           } catch (e) {
-            if (e instanceof AxiosError && e.response?.data.error == 'unexpected_chunk_index') {
+            if (
+              e instanceof AxiosError &&
+              e.response?.data.error == "unexpected_chunk_index"
+            ) {
               // Retry with the expected chunk index
               chunkIndex = e.response!.data!.expectedChunkIndex - 1;
               continue;
@@ -123,7 +126,7 @@ const Upload = ({
             }
           }
         }
-      })
+      }),
     );
 
     Promise.all(fileUploadPromises);
@@ -135,14 +138,16 @@ const Upload = ({
       {
         isUserSignedIn: user ? true : false,
         isReverseShare,
-        allowUnauthenticatedShares: config.get('share.allowUnauthenticatedShares'),
-        enableEmailRecepients: config.get('email.enableShareEmailRecipients'),
-        maxExpiration: config.get('share.maxExpiration'),
-        shareIdLength: config.get('share.shareIdLength'),
+        allowUnauthenticatedShares: config.get(
+          "share.allowUnauthenticatedShares",
+        ),
+        enableEmailRecepients: config.get("email.enableShareEmailRecipients"),
+        maxExpiration: config.get("share.maxExpiration"),
+        shareIdLength: config.get("share.shareIdLength"),
         simplified,
       },
       files,
-      uploadFiles
+      uploadFiles,
     );
   };
 
@@ -157,14 +162,19 @@ const Upload = ({
 
   useEffect(() => {
     // Check if there are any files that failed to upload
-    const fileErrorCount = files.filter((file) => file.uploadingProgress == -1).length;
+    const fileErrorCount = files.filter(
+      (file) => file.uploadingProgress == -1,
+    ).length;
 
     if (fileErrorCount > 0) {
       if (!errorToastShown) {
-        toast.error(t('upload.notify.count-failed', { count: fileErrorCount }), {
-          withCloseButton: false,
-          autoClose: false,
-        });
+        toast.error(
+          t("upload.notify.count-failed", { count: fileErrorCount }),
+          {
+            withCloseButton: false,
+            autoClose: false,
+          },
+        );
       }
       errorToastShown = true;
     } else {
@@ -173,7 +183,11 @@ const Upload = ({
     }
 
     // Complete share
-    if (files.length > 0 && files.every((file) => file.uploadingProgress >= 100) && fileErrorCount == 0) {
+    if (
+      files.length > 0 &&
+      files.every((file) => file.uploadingProgress >= 100) &&
+      fileErrorCount == 0
+    ) {
       shareService
         .completeShare(createdShare.id)
         .then((share) => {
@@ -181,25 +195,38 @@ const Upload = ({
           showCompletedUploadModal(modals, share);
           setFiles([]);
         })
-        .catch(() => toast.error(t('upload.notify.generic-error')));
+        .catch(() => toast.error(t("upload.notify.generic-error")));
     }
   }, [files]);
 
   return (
     <>
-      <Meta title={t('upload.title')} />
-      <Group position="right" mb={20}>
-        <Button loading={isUploading} disabled={files.length <= 0} onClick={() => showCreateUploadModalCallback(files)}>
-          <FormattedMessage id="common.button.share" />
-        </Button>
-      </Group>
+      <Meta title={t("upload.title")} />
+
       <Dropzone
-        title={!autoOpenCreateUploadModal && files.length > 0 ? t('share.edit.append-upload') : undefined}
+        title={
+          !autoOpenCreateUploadModal && files.length > 0
+            ? t("share.edit.append-upload")
+            : undefined
+        }
         maxShareSize={maxShareSize}
         onFilesChanged={handleDropzoneFilesChanged}
         isUploading={isUploading}
+        queue_len={files.length}
       />
-      {files.length > 0 && <FileList<FileUpload> files={files} setFiles={setFiles} />}
+      {files.length > 0 && (
+        <FileList<FileUpload> files={files} setFiles={setFiles} />
+      )}
+
+      <Group position="center" mt={40} mb={20}>
+        <Button
+          loading={isUploading}
+          disabled={files.length <= 0}
+          onClick={() => showCreateUploadModalCallback(files)}
+        >
+          <FormattedMessage id="common.button.share" />
+        </Button>
+      </Group>
     </>
   );
 };

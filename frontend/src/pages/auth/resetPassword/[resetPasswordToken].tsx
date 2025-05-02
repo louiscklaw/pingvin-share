@@ -1,16 +1,25 @@
-import { Button, Container, createStyles, Group, Paper, PasswordInput, Text, Title } from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useRouter } from 'next/router';
-import { FormattedMessage } from 'react-intl';
-import * as yup from 'yup';
-import useTranslate from '../../../hooks/useTranslate.hook';
-import authService from '../../../services/auth.service';
-import toast from '../../../utils/toast.util';
+import {
+  Button,
+  Container,
+  createStyles,
+  Group,
+  Paper,
+  PasswordInput,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useRouter } from "next/router";
+import { FormattedMessage } from "react-intl";
+import * as yup from "yup";
+import useTranslate from "../../../hooks/useTranslate.hook";
+import authService from "../../../services/auth.service";
+import toast from "../../../utils/toast.util";
 
 const useStyles = createStyles((theme) => ({
   control: {
-    [theme.fn.smallerThan('xs')]: {
-      width: '100%',
+    [theme.fn.smallerThan("xs")]: {
+      width: "100%",
     },
   },
 }));
@@ -22,15 +31,15 @@ const ResetPassword = () => {
 
   const form = useForm({
     initialValues: {
-      password: '',
+      password: "",
     },
     validate: yupResolver(
       yup.object().shape({
         password: yup
           .string()
-          .min(8, t('common.error.too-short', { length: 8 }))
-          .required(t('common.error.field-required')),
-      })
+          .min(8, t("common.error.too-short", { length: 8 }))
+          .required(t("common.error.field-required")),
+      }),
     ),
   });
 
@@ -51,17 +60,17 @@ const ResetPassword = () => {
             authService
               .resetPassword(resetPasswordToken, values.password)
               .then(() => {
-                toast.success(t('resetPassword.notify.passwordReset'));
+                toast.success(t("resetPassword.notify.passwordReset"));
 
-                router.push('/auth/signIn');
+                router.push("/auth/signIn");
               })
               .catch(toast.axiosError);
           })}
         >
           <PasswordInput
-            label={t('resetPassword.input.password')}
+            label={t("resetPassword.input.password")}
             placeholder="••••••••••"
-            {...form.getInputProps('password')}
+            {...form.getInputProps("password")}
           />
           <Group position="right" mt="lg">
             <Button type="submit" className={classes.control}>
