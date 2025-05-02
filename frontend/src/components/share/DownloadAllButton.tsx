@@ -1,9 +1,9 @@
-import { Button } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
-import useTranslate from '../../hooks/useTranslate.hook';
-import shareService from '../../services/share.service';
-import toast from '../../utils/toast.util';
+import { Button } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
+import useTranslate from "../../hooks/useTranslate.hook";
+import shareService from "../../services/share.service";
+import toast from "../../utils/toast.util";
 
 const DownloadAllButton = ({ shareId }: { shareId: string }) => {
   const [isZipReady, setIsZipReady] = useState(false);
@@ -12,7 +12,9 @@ const DownloadAllButton = ({ shareId }: { shareId: string }) => {
 
   const downloadAll = async () => {
     setIsLoading(true);
-    await shareService.downloadFile(shareId, 'zip').then(() => setIsLoading(false));
+    await shareService
+      .downloadFile(shareId, "zip")
+      .then(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const DownloadAllButton = ({ shareId }: { shareId: string }) => {
       loading={isLoading}
       onClick={() => {
         if (!isZipReady) {
-          toast.error(t('share.notify.download-all-preparing'));
+          toast.error(t("share.notify.download-all-preparing"));
         } else {
           downloadAll();
         }

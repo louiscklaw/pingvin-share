@@ -7,6 +7,6 @@
   "watch": [
     "src","public"
   ],
-  "delay": 2500,
+  "delay": 500,
   "ext": "ts,tsx"
 }

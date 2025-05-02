@@ -22,8 +22,10 @@
     "import/no-anonymous-default-export": [
       "off"
     ],
+    // TODO: resume this
+    // "no-unused-vars": ["warn"],
     "no-unused-vars": [
-      "warn"
+      "off"
     ],
     "react/no-unescaped-entities": [
       "off"

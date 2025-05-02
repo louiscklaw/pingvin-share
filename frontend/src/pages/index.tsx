@@ -164,7 +164,6 @@ export default function Home() {
   return (
     <>
       <Meta title="Louislabs file share" />
-
       <Container>
         <div className={classes.inner}>
           <div className={classes.content}>

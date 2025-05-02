@@ -1,4 +1,4 @@
-import User from './user.type';
+import User from "./user.type";
 
 export type Share = {
   id: string;
@@ -34,7 +34,7 @@ export type ShareMetaData = {
   isZipReady: boolean;
 };
 
-export type MyShare = Omit<Share, 'hasPassword'> & {
+export type MyShare = Omit<Share, "hasPassword"> & {
   views: number;
   createdAt: Date;
   security: MyShareSecurity;

@@ -12,7 +12,11 @@ const defaultPreferences = [
 const get = (key: string) => {
   if (typeof window !== "undefined") {
     const preferences = JSON.parse(localStorage.getItem("preferences") ?? "{}");
-    return preferences[key] ?? defaultPreferences.find((p) => p.key == key)?.value ?? null;
+    return (
+      preferences[key] ??
+      defaultPreferences.find((p) => p.key == key)?.value ??
+      null
+    );
   }
 };
 

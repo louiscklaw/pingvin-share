@@ -1,13 +1,13 @@
-import { getCookie } from 'cookies-next';
-import * as jose from 'jose';
-import api from './api.service';
+import { getCookie } from "cookies-next";
+import * as jose from "jose";
+import api from "./api.service";
 
 const signIn = async (emailOrUsername: string, password: string) => {
-  const emailOrUsernameBody = emailOrUsername.includes('@')
+  const emailOrUsernameBody = emailOrUsername.includes("@")
     ? { email: emailOrUsername }
     : { username: emailOrUsername };
 
-  const response = await api.post('auth/signIn', {
+  const response = await api.post("auth/signIn", {
     ...emailOrUsernameBody,
     password,
   });
@@ -16,35 +16,39 @@ const signIn = async (emailOrUsername: string, password: string) => {
 };
 
 const signInTotp = (totp: string, loginToken: string) => {
-  return api.post('auth/signIn/totp', {
+  return api.post("auth/signIn/totp", {
     totp,
     loginToken,
   });
 };
 
 const signUp = async (email: string, username: string, password: string) => {
-  const response = await api.post('auth/signUp', { email, username, password });
+  const response = await api.post("auth/signUp", { email, username, password });
 
   return response;
 };
 
 const signOut = async () => {
-  const response = await api.post('/auth/signOut');
+  const response = await api.post("/auth/signOut");
 
-  if (URL.canParse(response.data?.redirectURI)) window.location.href = response.data.redirectURI;
+  if (URL.canParse(response.data?.redirectURI))
+    window.location.href = response.data.redirectURI;
   else window.location.reload();
 };
 
 const refreshAccessToken = async () => {
   try {
-    const accessToken = getCookie('access_token') as string;
+    const accessToken = getCookie("access_token") as string;
 
     // If the access token expires in less than 2 minutes refresh it
-    if (accessToken && (jose.decodeJwt(accessToken).exp ?? 0) * 1000 < Date.now() + 2 * 60 * 1000) {
-      await api.post('/auth/token');
+    if (
+      accessToken &&
+      (jose.decodeJwt(accessToken).exp ?? 0) * 1000 < Date.now() + 2 * 60 * 1000
+    ) {
+      await api.post("/auth/token");
     }
   } catch (e) {
-    console.info('Refresh token invalid or expired');
+    console.info("Refresh token invalid or expired");
   }
 };
 
@@ -53,15 +57,15 @@ const requestResetPassword = async (email: string) => {
 };
 
 const resetPassword = async (token: string, password: string) => {
-  await api.post('/auth/resetPassword', { token, password });
+  await api.post("/auth/resetPassword", { token, password });
 };
 
 const updatePassword = async (oldPassword: string, password: string) => {
-  await api.patch('/auth/password', { oldPassword, password });
+  await api.patch("/auth/password", { oldPassword, password });
 };
 
 const enableTOTP = async (password: string) => {
-  const { data } = await api.post('/auth/totp/enable', { password });
+  const { data } = await api.post("/auth/totp/enable", { password });
 
   return {
     totpAuthUrl: data.totpAuthUrl,
@@ -71,25 +75,25 @@ const enableTOTP = async (password: string) => {
 };
 
 const verifyTOTP = async (totpCode: string, password: string) => {
-  await api.post('/auth/totp/verify', {
+  await api.post("/auth/totp/verify", {
     code: totpCode,
     password,
   });
 };
 
 const disableTOTP = async (totpCode: string, password: string) => {
-  await api.post('/auth/totp/disable', {
+  await api.post("/auth/totp/disable", {
     code: totpCode,
     password,
   });
 };
 
 const getAvailableOAuth = async () => {
-  return api.get('/oauth/available');
+  return api.get("/oauth/available");
 };
 
 const getOAuthStatus = () => {
-  return api.get('/oauth/status');
+  return api.get("/oauth/status");
 };
 
 export default {

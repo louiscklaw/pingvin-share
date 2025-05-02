@@ -23,6 +23,10 @@ export default class _Document extends Document {
             href="https://fonts.gstatic.com"
             crossOrigin=""
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@100..900&display=swap"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />

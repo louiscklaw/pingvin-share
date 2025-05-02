@@ -1,12 +1,23 @@
-import { Button, Center, Group, Image, Stack, Text, TextInput, Tooltip } from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
-import { useModals } from '@mantine/modals';
-import { ModalsContextProps } from '@mantine/modals/lib/context';
-import { FormattedMessage } from 'react-intl';
-import * as yup from 'yup';
-import useTranslate, { translateOutsideContext } from '../../hooks/useTranslate.hook';
-import authService from '../../services/auth.service';
-import toast from '../../utils/toast.util';
+import {
+  Button,
+  Center,
+  Group,
+  Image,
+  Stack,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
+import { useForm, yupResolver } from "@mantine/form";
+import { useModals } from "@mantine/modals";
+import { ModalsContextProps } from "@mantine/modals/lib/context";
+import { FormattedMessage } from "react-intl";
+import * as yup from "yup";
+import useTranslate, {
+  translateOutsideContext,
+} from "../../hooks/useTranslate.hook";
+import authService from "../../services/auth.service";
+import toast from "../../utils/toast.util";
 
 const showEnableTotpModal = (
   modals: ModalsContextProps,
@@ -15,12 +26,14 @@ const showEnableTotpModal = (
     qrCode: string;
     secret: string;
     password: string;
-  }
+  },
 ) => {
   const t = translateOutsideContext();
   return modals.openModal({
-    title: t('account.modal.totp.title'),
-    children: <CreateEnableTotpModal options={options} refreshUser={refreshUser} />,
+    title: t("account.modal.totp.title"),
+    children: (
+      <CreateEnableTotpModal options={options} refreshUser={refreshUser} />
+    ),
   });
 };
 
@@ -44,12 +57,12 @@ const CreateEnableTotpModal = ({
       .min(6)
       .max(6)
       .required()
-      .matches(/^[0-9]+$/, { message: 'Code must be a number' }),
+      .matches(/^[0-9]+$/, { message: "Code must be a number" }),
   });
 
   const form = useForm({
     initialValues: {
-      code: '',
+      code: "",
     },
     validate: yupResolver(validationSchema),
   });
@@ -65,16 +78,16 @@ const CreateEnableTotpModal = ({
 
           <Center>
             <span>
-              {' '}
+              {" "}
               <FormattedMessage id="common.text.or" />
             </span>
           </Center>
 
-          <Tooltip label={t('common.button.clickToCopy')}>
+          <Tooltip label={t("common.button.clickToCopy")}>
             <Button
               onClick={() => {
                 navigator.clipboard.writeText(options.secret);
-                toast.success(t('common.notify.copied'));
+                toast.success(t("common.notify.copied"));
               }}
             >
               {options.secret}
@@ -93,7 +106,7 @@ const CreateEnableTotpModal = ({
               authService
                 .verifyTOTP(values.code, options.password)
                 .then(() => {
-                  toast.success(t('account.notify.totp.enable'));
+                  toast.success(t("account.notify.totp.enable"));
                   modals.closeAll();
                   refreshUser();
                 })
@@ -102,14 +115,18 @@ const CreateEnableTotpModal = ({
           >
             <Group align="end">
               <TextInput
-                style={{ flex: '1' }}
+                style={{ flex: "1" }}
                 variant="filled"
-                label={t('account.modal.totp.code')}
+                label={t("account.modal.totp.code")}
                 placeholder="******"
-                {...form.getInputProps('code')}
+                {...form.getInputProps("code")}
               />
 
-              <Button style={{ flex: '0 0 auto' }} variant="outline" type="submit">
+              <Button
+                style={{ flex: "0 0 auto" }}
+                variant="outline"
+                type="submit"
+              >
                 <FormattedMessage id="account.modal.totp.verify" />
               </Button>
             </Group>

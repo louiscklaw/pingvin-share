@@ -19,6 +19,7 @@ import { FileUpload } from "../../types/File.type";
 import { CreateShare, Share } from "../../types/share.type";
 import toast from "../../utils/toast.util";
 import { useRouter } from "next/router";
+import Layout from "../../components/layout";
 
 const promiseLimit = pLimit(3);
 let errorToastShown = false;
@@ -76,7 +77,7 @@ const Upload = ({
                 file.uploadingProgress = progress;
               }
               return file;
-            }),
+            })
           );
         };
 
@@ -101,7 +102,7 @@ const Upload = ({
                   name: file.name,
                 },
                 chunkIndex,
-                chunks,
+                chunks
               )
               .then((response) => {
                 fileId = response.id;
@@ -126,7 +127,7 @@ const Upload = ({
             }
           }
         }
-      }),
+      })
     );
 
     Promise.all(fileUploadPromises);
@@ -139,7 +140,7 @@ const Upload = ({
         isUserSignedIn: user ? true : false,
         isReverseShare,
         allowUnauthenticatedShares: config.get(
-          "share.allowUnauthenticatedShares",
+          "share.allowUnauthenticatedShares"
         ),
         enableEmailRecepients: config.get("email.enableShareEmailRecipients"),
         maxExpiration: config.get("share.maxExpiration"),
@@ -147,7 +148,7 @@ const Upload = ({
         simplified,
       },
       files,
-      uploadFiles,
+      uploadFiles
     );
   };
 
@@ -163,7 +164,7 @@ const Upload = ({
   useEffect(() => {
     // Check if there are any files that failed to upload
     const fileErrorCount = files.filter(
-      (file) => file.uploadingProgress == -1,
+      (file) => file.uploadingProgress == -1
     ).length;
 
     if (fileErrorCount > 0) {
@@ -173,7 +174,7 @@ const Upload = ({
           {
             withCloseButton: false,
             autoClose: false,
-          },
+          }
         );
       }
       errorToastShown = true;
@@ -202,31 +203,32 @@ const Upload = ({
   return (
     <>
       <Meta title={t("upload.title")} />
+      <Layout>
+        <Dropzone
+          title={
+            !autoOpenCreateUploadModal && files.length > 0
+              ? t("share.edit.append-upload")
+              : undefined
+          }
+          maxShareSize={maxShareSize}
+          onFilesChanged={handleDropzoneFilesChanged}
+          isUploading={isUploading}
+          queue_len={files.length}
+        />
+        {files.length > 0 && (
+          <FileList<FileUpload> files={files} setFiles={setFiles} />
+        )}
 
-      <Dropzone
-        title={
-          !autoOpenCreateUploadModal && files.length > 0
-            ? t("share.edit.append-upload")
-            : undefined
-        }
-        maxShareSize={maxShareSize}
-        onFilesChanged={handleDropzoneFilesChanged}
-        isUploading={isUploading}
-        queue_len={files.length}
-      />
-      {files.length > 0 && (
-        <FileList<FileUpload> files={files} setFiles={setFiles} />
-      )}
-
-      <Group position="center" mt={40} mb={20}>
-        <Button
-          loading={isUploading}
-          disabled={files.length <= 0}
-          onClick={() => showCreateUploadModalCallback(files)}
-        >
-          <FormattedMessage id="common.button.share" />
-        </Button>
-      </Group>
+        <Group position="center" mt={40} mb={20}>
+          <Button
+            loading={isUploading}
+            disabled={files.length <= 0}
+            onClick={() => showCreateUploadModalCallback(files)}
+          >
+            <FormattedMessage id="common.button.share" />
+          </Button>
+        </Group>
+      </Layout>
     </>
   );
 };

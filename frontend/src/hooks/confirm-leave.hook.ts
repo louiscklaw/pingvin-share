@@ -1,7 +1,13 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const useConfirmLeave = ({ message, enabled }: { message: string; enabled: boolean }) => {
+const useConfirmLeave = ({
+  message,
+  enabled,
+}: {
+  message: string;
+  enabled: boolean;
+}) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -11,8 +17,8 @@ const useConfirmLeave = ({ message, enabled }: { message: string; enabled: boole
     const handleRouteChange = () => {
       const confirmLeave = window.confirm(message);
       if (!confirmLeave) {
-        router.events.emit('routeChangeError');
-        throw 'Route change aborted.';
+        router.events.emit("routeChangeError");
+        throw "Route change aborted.";
       }
     };
 
@@ -23,12 +29,12 @@ const useConfirmLeave = ({ message, enabled }: { message: string; enabled: boole
       return message;
     };
 
-    router.events.on('routeChangeStart', handleRouteChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    router.events.on("routeChangeStart", handleRouteChange);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      router.events.off("routeChangeStart", handleRouteChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [router, message, enabled]);
 };

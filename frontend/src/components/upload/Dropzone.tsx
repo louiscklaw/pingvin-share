@@ -1,16 +1,16 @@
-import { Button, Center, createStyles, Group, Text } from '@mantine/core';
-import { Dropzone as MantineDropzone } from '@mantine/dropzone';
-import { ForwardedRef, useRef } from 'react';
-import { TbCloudUpload, TbUpload } from 'react-icons/tb';
-import { FormattedMessage } from 'react-intl';
-import useTranslate from '../../hooks/useTranslate.hook';
-import { FileUpload } from '../../types/File.type';
-import { byteToHumanSizeString } from '../../utils/fileSize.util';
-import toast from '../../utils/toast.util';
+import { Button, Center, createStyles, Group, Text } from "@mantine/core";
+import { Dropzone as MantineDropzone } from "@mantine/dropzone";
+import { ForwardedRef, useRef } from "react";
+import { TbCloudUpload, TbUpload } from "react-icons/tb";
+import { FormattedMessage } from "react-intl";
+import useTranslate from "../../hooks/useTranslate.hook";
+import { FileUpload } from "../../types/File.type";
+import { byteToHumanSizeString } from "../../utils/fileSize.util";
+import toast from "../../utils/toast.util";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    position: 'relative',
+    position: "relative",
     marginBottom: 30,
   },
 
@@ -20,11 +20,14 @@ const useStyles = createStyles((theme) => ({
   },
 
   icon: {
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[4],
+    color:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[3]
+        : theme.colors.gray[4],
   },
 
   control: {
-    position: 'absolute',
+    position: "absolute",
     bottom: -20,
   },
 }));
@@ -33,10 +36,12 @@ const Dropzone = ({
   title,
   isUploading,
   maxShareSize,
+  queue_len,
   onFilesChanged,
 }: {
   title?: string;
   isUploading: boolean;
+  queue_len: number;
   maxShareSize: number;
   onFilesChanged: (files: FileUpload[]) => void;
 }) => {
@@ -57,9 +62,9 @@ const Dropzone = ({
 
           if (fileSizeSum > maxShareSize) {
             toast.error(
-              t('upload.dropzone.notify.file-too-big', {
+              t("upload.dropzone.notify.file-too-big", {
                 maxSize: byteToHumanSizeString(maxShareSize),
-              })
+              }),
             );
           } else {
             files = files.map((newFile) => {
@@ -72,13 +77,20 @@ const Dropzone = ({
         className={classes.dropzone}
         radius="md"
       >
-        <div style={{ pointerEvents: 'none' }}>
+        <div style={{ pointerEvents: "none" }}>
           <Group position="center">
-            <TbCloudUpload size={50} />
+              <TbCloudUpload size={queue_len > 0 ? 50 : 150} />
           </Group>
-          <Text align="center" weight={700} size="lg" mt="xl">
+
+            <Text
+              align="center"
+              weight={400}
+              size={queue_len > 0 ? "md" : "xl"}
+              mt={queue_len > 0 ? "md" : "xl"}
+            >
             {title || <FormattedMessage id="upload.dropzone.title" />}
           </Text>
+
           <Text align="center" size="sm" mt="xs" color="dimmed">
             <FormattedMessage
               id="upload.dropzone.description"

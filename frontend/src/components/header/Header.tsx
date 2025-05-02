@@ -9,17 +9,17 @@ import {
   Stack,
   Text,
   Transition,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
-import useConfig from '../../hooks/config.hook';
-import useUser from '../../hooks/user.hook';
-import useTranslate from '../../hooks/useTranslate.hook';
-import Logo from '../Logo';
-import ActionAvatar from './ActionAvatar';
-import NavbarShareMenu from './NavbarShareMenu';
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { ReactNode, useEffect, useState } from "react";
+import useConfig from "../../hooks/config.hook";
+import useUser from "../../hooks/user.hook";
+import useTranslate from "../../hooks/useTranslate.hook";
+import Logo from "../Logo";
+import ActionAvatar from "./ActionAvatar";
+import NavbarShareMenu from "./NavbarShareMenu";
 
 const HEADER_HEIGHT = 60;
 
@@ -31,13 +31,10 @@ type NavLink = {
 };
 
 const useStyles = createStyles((theme) => ({
-  root: {
-    position: 'relative',
-    zIndex: 1,
-  },
+  root: { position: "relative", zIndex: 1, border: "none" },
 
   dropdown: {
-    position: 'absolute',
+    position: "absolute",
     top: HEADER_HEIGHT,
     left: 0,
     right: 0,
@@ -45,59 +42,66 @@ const useStyles = createStyles((theme) => ({
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     borderTopWidth: 0,
-    overflow: 'hidden',
+    overflow: "hidden",
 
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
+    [theme.fn.largerThan("sm")]: {
+      display: "none",
     },
   },
 
   header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: '100%',
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: "100%",
   },
 
   links: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
+    [theme.fn.smallerThan("sm")]: {
+      display: "none",
     },
   },
 
   burger: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
+    [theme.fn.largerThan("sm")]: {
+      display: "none",
     },
   },
 
   link: {
-    display: 'block',
+    display: "block",
     lineHeight: 1,
-    padding: '8px 12px',
+    padding: "8px 12px",
     borderRadius: theme.radius.sm,
-    textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+    textDecoration: "none",
+    color:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[0]
+        : theme.colors.gray[7],
     fontSize: theme.fontSizes.sm,
     fontWeight: 500,
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+    "&:hover": {
+      backgroundColor:
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[6]
+          : theme.colors.gray[0],
     },
 
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan("sm")]: {
       borderRadius: 0,
       padding: theme.spacing.md,
     },
   },
 
   linkActive: {
-    '&, &:hover': {
+    "&, &:hover": {
       backgroundColor:
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
           : theme.colors[theme.primaryColor][0],
-      color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
+      color:
+        theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 3 : 7],
     },
   },
 }));
@@ -110,49 +114,43 @@ const Header = () => {
 
   const [opened, toggleOpened] = useDisclosure(false);
 
-  const [currentRoute, setCurrentRoute] = useState('');
+  const [currentRoute, setCurrentRoute] = useState("");
 
   useEffect(() => {
     setCurrentRoute(router.pathname);
   }, [router.pathname]);
 
   const authenticatedLinks: NavLink[] = [
-    {
-      link: '/upload',
-      label: t('navbar.upload'),
-    },
-    {
-      component: <NavbarShareMenu />,
-    },
-    {
-      component: <ActionAvatar />,
-    },
+    { link: "/upload", label: t("navbar.upload") },
+    { component: <NavbarShareMenu /> },
+    { component: <ActionAvatar /> },
   ];
 
   let unauthenticatedLinks: NavLink[] = [
     {
-      link: '/auth/signIn',
-      label: t('navbar.signin'),
+      link: "/auth/signIn",
+      label: t("navbar.signin"),
     },
   ];
 
-  if (config.get('share.allowUnauthenticatedShares')) {
-    unauthenticatedLinks.unshift({
-      link: '/upload',
-      label: t('navbar.upload'),
-    });
-  }
+  // hide upload from original source code
+  // if (config.get("share.allowUnauthenticatedShares")) {
+  //   unauthenticatedLinks.unshift({
+  //     link: "/upload",
+  //     label: t("navbar.upload"),
+  //   });
+  // }
 
-  if (config.get('general.showHomePage'))
+  if (config.get("general.showHomePage"))
     unauthenticatedLinks.unshift({
-      link: '/',
-      label: t('navbar.home'),
+      link: "/",
+      label: t("navbar.home"),
     });
 
-  if (config.get('share.allowRegistration'))
+  if (config.get("share.allowRegistration"))
     unauthenticatedLinks.push({
-      link: '/auth/signUp',
-      label: t('navbar.signup'),
+      link: "/auth/signUp",
+      label: t("navbar.signup"),
     });
 
   const { classes, cx } = useStyles();
@@ -166,10 +164,11 @@ const Header = () => {
             </Box>
           );
         }
+
         return (
           <Link
             key={link.label}
-            href={link.link ?? ''}
+            href={link.link ?? ""}
             onClick={() => toggleOpened.toggle()}
             className={cx(classes.link, {
               [classes.linkActive]: currentRoute == link.link,
@@ -181,19 +180,25 @@ const Header = () => {
       })}
     </>
   );
+
   return (
     <MantineHeader height={HEADER_HEIGHT} mb={40} className={classes.root}>
       <Container className={classes.header}>
         <Link href="/" passHref>
           <Group>
             <Logo height={35} width={35} />
-            <Text weight={600}>{config.get('general.appName')}</Text>
+            <Text weight={600}>{config.get("general.appName")}</Text>
           </Group>
         </Link>
         <Group spacing={5} className={classes.links}>
           <Group>{items} </Group>
         </Group>
-        <Burger opened={opened} onClick={() => toggleOpened.toggle()} className={classes.burger} size="sm" />
+        <Burger
+          opened={opened}
+          onClick={() => toggleOpened.toggle()}
+          className={classes.burger}
+          size="sm"
+        />
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
