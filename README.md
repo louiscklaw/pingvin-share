@@ -34,8 +34,10 @@ Pingvin Share is a self-hosted file sharing platform and an alternative for WeTr
 
 The website is now listening on `http://localhost:3000`, have fun with Pingvin Share 🐧!
 
+<!--
 > [!TIP]
 > Checkout [Pocket ID](https://github.com/stonith404/pocket-id), a user-friendly OIDC provider that lets you easily log in to services like Pingvin Share using Passkeys.
+-->
 
 ### Development Setup
 
