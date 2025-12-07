@@ -73,6 +73,7 @@ docker compose logs -f
 
 For more installation options and advanced configurations, please refer to the [documentation](https://stonith404.github.io/pingvin-share).
 
+<!--
 ## 🖤 Contribute
 
 We would love it if you want to help make Pingvin Share better! You can either [help to translate](https://stonith404.github.io/pingvin-share/help-out/translate) Pingvin Share or [contribute to the codebase](https://stonith404.github.io/pingvin-share/help-out/contribute).
@@ -82,3 +83,4 @@ We would love it if you want to help make Pingvin Share better! You can either [
 Thank you for supporting Pingvin Share 🙏
 
 - [@COMPLEXWASTAKEN](https://github.com/COMPLEXWASTAKEN)
+-->
