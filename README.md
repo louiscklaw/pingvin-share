@@ -37,6 +37,36 @@ The website is now listening on `http://localhost:3000`, have fun with Pingvin S
 > [!TIP]
 > Checkout [Pocket ID](https://github.com/stonith404/pocket-id), a user-friendly OIDC provider that lets you easily log in to services like Pingvin Share using Passkeys.
 
+### Development Setup
+
+```bash
+# Start development containers
+docker compose -f docker-compose.dev.yml up -d
+
+# Backend setup
+cd backend
+npm install -D
+npm run dev
+
+# Frontend setup
+cd frontend
+npm install -D
+npm run dev
+```
+
+### Production Deployment
+
+```bash
+# Build and push Docker images
+./build.sh
+docker compose push
+
+# On production server:
+docker compose pull
+docker compose up -d
+docker compose logs -f
+```
+
 ## 📚 Documentation
 
 For more installation options and advanced configurations, please refer to the [documentation](https://stonith404.github.io/pingvin-share).
