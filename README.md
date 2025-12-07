@@ -20,8 +20,8 @@ Pingvin Share is a self-hosted file sharing platform and an alternative for WeTr
 
 ## 🐧 Get to know Pingvin Share
 
-- [Demo](https://pingvin-share.dev.eliasschneider.com)
-- [Review by DB Tech](https://www.youtube.com/watch?v=rWwNeZCOPJA)
+- [Demo](https://share.louislabs.com)
+<!-- - [Review by DB Tech](https://www.youtube.com/watch?v=rWwNeZCOPJA) -->
 
 <img src="https://raw.githubusercontent.com/louiscklaw/pingvin-share/refs/heads/main/docs/static/img/image.png" width="700"/>
 
